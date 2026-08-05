@@ -64,6 +64,8 @@
   margin: 0 0 10px;
   color: var(--text-muted);
   font-size: 14px;
+  text-wrap: pretty;
+  text-align: justify;
 }
 
 .tags {

@@ -23,6 +23,11 @@
 
 .body {
   color: var(--text);
-  max-width: 60ch;
   margin: 0;
+  text-wrap: pretty;
+  text-align: justify;
+}
+
+.body + .body {
+  margin-top: 16px;
 }
