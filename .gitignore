@@ -1,0 +1,14 @@
+# Dados pessoais (protótipo + PDF do currículo) — nunca commitar
+local_files/
+
+# Secrets e ambiente
+.env
+.env.local
+
+# Dependências e build
+node_modules/
+dist/
+
+# Editor / SO
+.DS_Store
+.vscode/*
