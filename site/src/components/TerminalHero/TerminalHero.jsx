@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import styles from './TerminalHero.module.css'
 
 const TYPED_LINE =
-  'Desenvolvedor Back-end .NET | Líder de dev no LearningLab | Ciência da Computação — UFC.'
+  'Desenvolvedor Back-end .NET | Líder de desenvolvimento no LearningLab | Formado em Ciência da Computação pela UFC.'
 
 const COMMANDS = [
   { id: 'sobre', label: 'cd ./sobre' },
