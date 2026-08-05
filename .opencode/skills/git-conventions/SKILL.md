@@ -46,8 +46,10 @@ commits menores.
 - Trabalhar em branches de feature, mesmo em projeto solo: `feat/nome-da-coisa`,
   `fix/nome-do-bug`, `chore/nome-da-tarefa`. Exemplo: `feat/terminal-hero`,
   `chore/setup-vite`.
-- Mergear na `main` só depois de rodar localmente e conferir visualmente
-  (checklist abaixo).
+- Mergear na `main` **somente quando o usuário pedir explicitamente**, depois
+  de ele conferir visualmente (checklist abaixo). Nunca apagar a branch por
+  conta própria — o merge e a remoção da branch dependem da confirmação do
+  usuário.
 
 ## Antes de mergear na main (checklist)
 - [ ] `npm run dev` roda sem erro
@@ -56,6 +58,7 @@ commits menores.
 - [ ] A mensagem de commit segue o padrão Conventional Commits
 - [ ] `AGENTS.md`/`planejamento.md` atualizados se a mudança alterar alguma
       decisão documentada lá
+- [ ] O usuário conferiu e pediu explicitamente o merge (e a remoção da branch)
 
 ## O que nunca commitar
 - `node_modules/`, `dist/` — devem estar no `.gitignore`

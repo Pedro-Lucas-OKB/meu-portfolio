@@ -12,17 +12,15 @@ trabalhar, não *o quê*.
   estado externo — useState/useEffect bastam
 
 ## Estado atual (verifique antes de assumir o contrário)
-- `site/` ainda é o **template padrão do Vite** — o port do protótipo para os
-  componentes (TerminalHero, About, Projects, ContactForm, Footer) **não foi
-  feito**. Não existe `site/src/components/` ainda, e `site/src/index.css`
-  contém o CSS padrão do Vite, não os tokens de design.
-- `site/index.html` ainda é o default (lang="en", title="site") — precisa virar
-  pt-BR com o nome completo ("Pedro Lucas da Costa Vidal") no `<title>`.
+- Port do protótipo **concluído**: componentes em `site/src/components/`
+  (TerminalHero, About, Projects, ContactForm, Footer), cada um com `.module.css`.
+  Tokens de design já movidos para `site/src/index.css`; `site/index.html` já é
+  pt-BR com o nome completo no `<title>`.
 - Protótipo de referência (conteúdo + visual reais) é `local_files/index.html`.
-  Portar para componentes, não redesenhar do zero.
 - `infra/` e `.github/workflows/` estão **vazios** — CI/CD e deploy ainda não
   começaram. Não criar recursos AWS reais.
-- Repositório sem commits ainda (branch `main` limpa).
+- Repositório já tem commits na `main`. Trabalhar em branches de feature e só
+  mergear/apagar branch com confirmação explícita do usuário.
 
 ## Comandos (rodar dentro de `site/`)
 - `npm install` — instalar dependências (projeto ainda não commitado)
@@ -49,9 +47,10 @@ trabalhar, não *o quê*.
   ainda não escrito. Formulário fica só visual (fake submit)
 - Não decidir estrutura de infraestrutura AWS sozinho — seguir `planejamento.md`
 - Não commitar `local_files/` (protótipo + PDF do currículo, dados pessoais).
-  Apesar de os docs dizerem que está "fora do controle de versão", **não há
-  `.gitignore` na raiz** — um `git add .` acabaria incluindo. Adicionar
-  explicitamente o que for commitar
+  O `.gitignore` na raiz já exclui esse diretório, mas conferir o `git status`
+  antes de qualquer `git add` por segurança
+- **Nunca** mergear na `main` nem apagar uma branch por conta própria — deixar
+  a branch pronta e parar ali, aguardando o usuário conferir e pedir o merge
 
 ## Skills obrigatórias
 - `design-tokens` — antes de criar/editar qualquer componente visual (React/CSS)
