@@ -33,8 +33,8 @@ function ContactForm() {
         </button>
         <p className={styles.formNote}>
           {submitted
-            ? 'Mensagem recebida — o envio real chega na próxima etapa, com AWS Lambda + SES.'
-            : 'este formulário ainda é só visual — vamos ligá-lo a uma função Lambda na próxima etapa.'}
+            ? 'Mensagem recebida. O envio real chega na próxima etapa, com AWS Lambda + SES.'
+            : 'este formulário ainda é só visual. Vamos ligá-lo a uma função Lambda na próxima etapa.'}
         </p>
       </form>
     </section>
