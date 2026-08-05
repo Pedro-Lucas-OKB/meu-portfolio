@@ -1,0 +1,108 @@
+.hero {
+  padding: 56px 0 32px;
+}
+
+.term {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+.termBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-panel-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.termDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--term-dot);
+}
+
+.termTitle {
+  margin-left: 8px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.termBody {
+  padding: 24px 20px 28px;
+  font-size: 15px;
+}
+
+.line {
+  white-space: pre-wrap;
+}
+
+.prompt {
+  color: var(--accent-sage);
+}
+
+.cursor {
+  display: inline-block;
+  width: 8px;
+  height: 1em;
+  background: var(--text);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 1s steps(1) infinite;
+}
+
+.output {
+  color: var(--text);
+  margin: 6px 0 0;
+}
+
+.commands {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.cmdBtn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.cmdBtn .prompt {
+  margin-right: 6px;
+}
+
+.cmdBtn:hover,
+.cmdBtn:focus-visible {
+  color: var(--accent-sage);
+  text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}

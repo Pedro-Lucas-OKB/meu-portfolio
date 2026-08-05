@@ -29,6 +29,7 @@ Sempre usar como variáveis CSS (custom properties), nunca hex direto num compon
 | `--accent-violet` | `#8b7cf6` | acento primário (nod ao C#/.NET) — links de destaque, tags, foco |
 | `--accent-sage` | `#6fcf97` | acento secundário (nod ao Linux Mint) — prompts, sucesso, cursor |
 | `--border` | `#2c2e3d` | bordas e divisores |
+| `--term-dot` | `#40414f` | pontos do "semáforo" da barra do terminal (decorativo) |
 
 Não introduzir novas cores fora dessa paleta sem atualizar esta tabela primeiro.
 
