@@ -1,4 +1,4 @@
-# Portfólio — Pedro Lucas Vidal
+# Portfólio — Pedro Lucas Da Costa Vidal
 
 Site portfólio pessoal de **Pedro Lucas da Costa Vidal**, desenvolvedor Back-end
 .NET (~2 anos de experiência) e líder de dev em um projeto com mais de 1300
