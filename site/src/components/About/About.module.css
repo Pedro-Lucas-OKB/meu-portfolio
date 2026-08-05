@@ -1,0 +1,28 @@
+.section {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sectionHead h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.prompt {
+  color: var(--accent-sage);
+  font-size: 14px;
+}
+
+.body {
+  color: var(--text);
+  max-width: 60ch;
+  margin: 0;
+}
