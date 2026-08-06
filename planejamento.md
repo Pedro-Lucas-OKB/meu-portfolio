@@ -61,6 +61,57 @@ meu-portfolio/
 5. CI/CD via GitHub Actions para build + deploy automático.
 6. Infra declarada com **Terraform** (decidido em conjunto; ver seção de infra abaixo).
 
+## Infra — Planejamento (Terraform)
+
+Ferramenta escolhida: **Terraform** (IaC declarativo, padrão de mercado).
+Nenhum recurso AWS real é criado sem confirmação explícita do usuário (geram
+custo) e sem a conta AWS configurada. Credenciais vão como *secrets* do GitHub
+Actions, nunca commitadas.
+
+### Recursos a criar
+| Recurso | Detalhes |
+|---|---|
+| Bucket S3 (ex: `pedrolucas-dev-br`) | hosting estático do build (`site/dist/`), acesso via CloudFront OAC |
+| CloudFront | distribuição HTTPS com origem no S3, cache e invalidação |
+| ACM | certificado `pedrolucas.dev.br` e `www` na região `us-east-1` (obrigatória para CloudFront) |
+| Route 53 | hosted zone + registros alias A/AAAA do domínio raiz e `www` → CloudFront |
+
+### Estrutura do `infra/`
+```
+infra/
+├── main.tf          # provider AWS e recursos raiz
+├── variables.tf     # região, domínio, etc.
+├── outputs.tf       # bucket, distribution id
+└── modules/
+    ├── s3/
+    ├── cloudfront/
+    ├── acm/
+    └── route53/
+```
+
+### Estado do Terraform
+- Por enquanto: `terraform.tfstate` **local** (gitignored).
+- Evolução futura: backend S3 remoto + lock DynamoDB, junto do CI/CD.
+
+### Migração de DNS
+- Domínio `pedrolucas.dev.br` hoje no Registro.br.
+- Criar a hosted zone no Route 53 e apontar os servidores NS no Registro.br.
+
+### CI/CD (GitHub Actions) — `.github/workflows/deploy.yml`
+- Trigger: push na `main`.
+- Steps: `npm ci` → `npm run build` → `aws s3 sync site/dist/` pro bucket →
+  invalidação do cache do CloudFront.
+- `terraform apply` roda manualmente (plan no CI) até termos backend remoto.
+- Secrets no GitHub: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`,
+  `CLOUDFRONT_DISTRIBUTION_ID`, `S3_BUCKET`.
+
+### Ordem de execução (quando aprovado)
+1. Configurar conta AWS + credenciais (local e secrets do GitHub).
+2. Escrever o `infra/` (Terraform) e o workflow de CI/CD.
+3. `terraform init` + `terraform apply` (S3, CloudFront, ACM, Route 53).
+4. Migrar DNS no Registro.br para a hosted zone.
+5. Validar HTTPS, cache e redirect do `www`.
+
 ## Status atual
 - [x] Protótipo v1 do `index.html` criado com conteúdo real
 - [x] Port do site para React + Vite (CSS Modules + design tokens)
@@ -71,8 +122,8 @@ meu-portfolio/
 - [x] Animações: whoami no load + títulos de seção digitando no scroll (com fallback `prefers-reduced-motion`)
 - [x] Scroll-spy no header (link da seção ativa em sage, com `aria-current`)
 - [x] Formulário de contato visual (fake submit — conectado na Fase 2)
-- [ ] Passada formal de acessibilidade (pendente)
-- [ ] Planejamento de infra (ver abaixo)
+- [x] Passada formal de acessibilidade (h1 no hero, foco visível, reduced-motion, `aria-current`, autocomplete)
+- [x] Planejamento de infra Terraform (seção acima)
 - [ ] Migração de DNS do Registro.br para o Route 53
 - [ ] Deploy S3 + CloudFront + ACM (recursos reais, com confirmação)
 - [ ] CI/CD GitHub Actions (build + deploy)
