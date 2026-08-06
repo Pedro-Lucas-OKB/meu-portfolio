@@ -31,7 +31,7 @@ function TerminalHero() {
         clearInterval(timer)
         setDone(true)
       }
-    }, 28)
+    }, 80)
     return () => clearInterval(timer)
   }, [])
 
