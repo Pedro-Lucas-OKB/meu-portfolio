@@ -8,6 +8,7 @@
   --accent-sage: #6fcf97;
   --border: #2c2e3d;
   --term-dot: #40414f;
+  --bg-dot: rgba(44, 46, 61, 0.6);
   --radius: 6px;
 
   --space-1: 4px;
@@ -39,7 +40,9 @@ html {
 
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, var(--bg-dot) 1px, transparent 1px);
+  background-size: var(--space-6) var(--space-6);
   color: var(--text);
   line-height: 1.5;
 }

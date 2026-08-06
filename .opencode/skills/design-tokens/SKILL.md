@@ -30,6 +30,7 @@ Sempre usar como variáveis CSS (custom properties), nunca hex direto num compon
 | `--accent-sage` | `#6fcf97` | acento secundário (nod ao Linux Mint) — prompts, sucesso, cursor |
 | `--border` | `#2c2e3d` | bordas e divisores |
 | `--term-dot` | `#40414f` | pontos do "semáforo" da barra do terminal (decorativo) |
+| `--bg-dot` | `rgba(44, 46, 61, 0.6)` | grade de pontos do fundo (derivada do `--border`, opacidade sutil-média) |
 
 Não introduzir novas cores fora dessa paleta sem atualizar esta tabela primeiro.
 
