@@ -99,11 +99,15 @@ Também fixa, sem valores soltos:
   frio.
 
 ## Movimento
-- Só uma animação orquestrada por carregamento de página (o "whoami" digitando
-  no hero). Nada de scroll-jacking, parallax ou hover exagerado.
+- Duas animações, ambas da mesma linguagem (digitação de terminal):
+  - **Carregamento**: o "whoami" do hero digita ao abrir a página.
+  - **Scroll**: os títulos de seção (que já são comandos, ex: `$ cat contato.md`)
+    digitam uma única vez quando a seção entra no viewport — ritmo mais rápido
+    que o do hero, e o cursor some quando o comando termina.
+- Nada de scroll-jacking, parallax ou hover exagerado.
 - Toda animação precisa ter fallback via `prefers-reduced-motion: reduce` —
-  se o usuário tiver essa preferência ativada no SO, a animação deve ser
-  pulada e o conteúdo final mostrado direto.
+  se o usuário tiver essa preferência ativada no SO, o texto completo é
+  mostrado direto, sem digitação nem cursor.
 
 ## Nome do Pedro
 - Nome completo ("Pedro Lucas da Costa Vidal") em `<title>`/meta tags/SEO.
