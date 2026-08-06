@@ -29,6 +29,8 @@
 }
 
 .contacts {
+  width: fit-content;
+  max-width: 100%;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
@@ -37,11 +39,15 @@
 
 .contactRow {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content auto;
   column-gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border);
   font-size: var(--text-sm);
+}
+
+.contactRow a {
+  overflow-wrap: anywhere;
 }
 
 .contactRow:last-child {
