@@ -46,19 +46,28 @@ const COMMITS = [
 ]
 
 function Experience() {
-  const [open, setOpen] = useState(COMMITS[0].hash)
+  const [open, setOpen] = useState(() => new Set(COMMITS.map((c) => c.hash)))
 
-  const toggle = (hash) => setOpen(open === hash ? null : hash)
+  const toggle = (hash) =>
+    setOpen((prev) => {
+      const next = new Set(prev)
+      if (next.has(hash)) {
+        next.delete(hash)
+      } else {
+        next.add(hash)
+      }
+      return next
+    })
 
   return (
     <section id="experiencias" className={styles.section}>
       <div className={styles.sectionHead}>
         <span className={styles.prompt}>$</span>
-        <h2>git log --graph --all --decorate</h2>
+        <h2>git log ./experiencias</h2>
       </div>
       <div className={styles.log}>
         {COMMITS.map((commit) => {
-          const isOpen = open === commit.hash
+          const isOpen = open.has(commit.hash)
           return (
             <article className={styles.commit} key={commit.hash}>
               <div className={styles.rail} aria-hidden="true">
@@ -87,12 +96,7 @@ function Experience() {
                     </ul>
                     <div className={styles.stats}>
                       {commit.stats.map((stat) => (
-                        <span
-                          key={stat}
-                          className={`${styles.stat} ${
-                            stat.startsWith('-') ? styles.statMinus : styles.statPlus
-                          }`}
-                        >
+                        <span key={stat} className={styles.stat}>
                           {stat}
                         </span>
                       ))}
