@@ -1,4 +1,4 @@
-# Portfólio Pessoal — Pedro Lucas Vidal — Planejamento
+# Portfólio Pessoal — Pedro Lucas — Planejamento
 
 ## Objetivo
 Site portfólio pessoal para apoiar candidatura a vagas de dev back-end .NET,
