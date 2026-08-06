@@ -46,11 +46,11 @@ function ContactForm() {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="nome">nome</label>
-          <input id="nome" name="nome" type="text" required />
+          <input id="nome" name="nome" type="text" autoComplete="name" required />
         </div>
         <div>
           <label htmlFor="email">email</label>
-          <input id="email" name="email" type="email" required />
+          <input id="email" name="email" type="email" autoComplete="email" required />
         </div>
         <div>
           <label htmlFor="mensagem">mensagem</label>

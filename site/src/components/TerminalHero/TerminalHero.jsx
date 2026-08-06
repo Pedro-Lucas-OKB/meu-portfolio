@@ -54,10 +54,10 @@ function TerminalHero() {
             {!done && <span className={styles.cursor} />}
           </div>
           <div aria-live="polite">
-            <p className={styles.output}>
+            <h1 className={styles.output}>
               {output}
               {done && <span className={styles.cursor} />}
-            </p>
+            </h1>
             {done && <p className={styles.role}>{ROLE}</p>}
           </div>
           <nav className={styles.commands} aria-label="Navegação principal">
