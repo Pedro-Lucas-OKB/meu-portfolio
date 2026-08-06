@@ -40,7 +40,7 @@ function TerminalHero() {
   }
 
   return (
-    <section className={styles.hero}>
+    <section id="terminal" className={styles.hero}>
       <div className={styles.term}>
         <div className={styles.termBar}>
           <span className={styles.termDot} />

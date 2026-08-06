@@ -43,3 +43,78 @@
   color: var(--accent-sage);
   text-decoration: none;
 }
+
+.toggle {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--accent-sage);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.toggle:hover,
+.toggle:focus-visible {
+  color: var(--accent-sage);
+}
+
+.toggleIcon {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+}
+
+.toggleIcon::before,
+.toggleIcon::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 14px;
+  height: 2px;
+  background: currentColor;
+}
+
+.toggleIcon::before {
+  top: -5px;
+}
+
+.toggleIcon::after {
+  top: 5px;
+}
+
+@media (max-width: 640px) {
+  .toggle {
+    display: flex;
+  }
+
+  .nav {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px dashed var(--border);
+    margin-top: 6px;
+    padding-top: 4px;
+  }
+
+  .navOpen {
+    display: flex;
+  }
+
+  .nav a {
+    font-size: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav a:last-child {
+    border-bottom: none;
+  }
+}
