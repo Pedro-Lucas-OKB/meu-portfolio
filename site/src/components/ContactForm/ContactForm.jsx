@@ -22,15 +22,15 @@ function ContactForm() {
           <a href="mailto:pedrolucasep5100@gmail.com">pedrolucasep5100@gmail.com</a>
         </div>
         <div className={styles.contactRow}>
-          <span className={styles.contactLabel}>github</span>
-          <a href="https://github.com/pedro-lucas-okb" target="_blank" rel="noopener">
-            github.com/pedro-lucas-okb
-          </a>
-        </div>
-        <div className={styles.contactRow}>
           <span className={styles.contactLabel}>linkedin</span>
           <a href="https://linkedin.com/in/pedrolucas-dev" target="_blank" rel="noopener">
             linkedin.com/in/pedrolucas-dev
+          </a>
+        </div>
+        <div className={styles.contactRow}>
+          <span className={styles.contactLabel}>github</span>
+          <a href="https://github.com/pedro-lucas-okb" target="_blank" rel="noopener">
+            github.com/pedro-lucas-okb
           </a>
         </div>
       </div>
