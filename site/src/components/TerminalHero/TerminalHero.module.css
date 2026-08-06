@@ -57,7 +57,16 @@
 
 .output {
   color: var(--text);
-  margin: 6px 0 0;
+  font-size: clamp(24px, 5vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 10px 0 0;
+}
+
+.role {
+  color: var(--text-muted);
+  font-size: 15px;
+  margin: 8px 0 0;
 }
 
 .commands {

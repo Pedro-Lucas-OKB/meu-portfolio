@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import styles from './TerminalHero.module.css'
 
-const TYPED_LINE =
-  'Desenvolvedor Back-end .NET | Líder de desenvolvimento no LearningLab | Formado em Ciência da Computação pela UFC.'
+const TYPED_NAME = 'Pedro Lucas'
+const ROLE = 'Desenvolvedor Back-end .NET'
 
 const COMMANDS = [
   { id: 'sobre', label: 'cd ./sobre' },
+  { id: 'skills', label: 'ls ./skills' },
   { id: 'projetos', label: 'ls ./projetos' },
   { id: 'contato', label: 'cat contato.md' },
 ]
@@ -16,7 +17,7 @@ function TerminalHero() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setOutput(TYPED_LINE)
+      setOutput(TYPED_NAME)
       setDone(true)
       return
     }
@@ -24,8 +25,8 @@ function TerminalHero() {
     let i = 0
     const timer = setInterval(() => {
       i += 1
-      setOutput(TYPED_LINE.slice(0, i))
-      if (i >= TYPED_LINE.length) {
+      setOutput(TYPED_NAME.slice(0, i))
+      if (i >= TYPED_NAME.length) {
         clearInterval(timer)
         setDone(true)
       }
@@ -44,17 +45,20 @@ function TerminalHero() {
           <span className={styles.termDot} />
           <span className={styles.termDot} />
           <span className={styles.termDot} />
-          <span className={styles.termTitle}>visitante@portfolio: ~</span>
+          <span className={styles.termTitle}>pedro-lucas@portfolio: ~</span>
         </div>
         <div className={styles.termBody}>
           <div className={styles.line}>
             <span className={styles.prompt}>$</span> whoami
             {!done && <span className={styles.cursor} />}
           </div>
-          <p className={styles.output} aria-live="polite">
-            {output}
-            {done && <span className={styles.cursor} />}
-          </p>
+          <div aria-live="polite">
+            <p className={styles.output}>
+              {output}
+              {done && <span className={styles.cursor} />}
+            </p>
+            {done && <p className={styles.role}>{ROLE}</p>}
+          </div>
           <nav className={styles.commands} aria-label="Navegação principal">
             <div className={styles.hint}>comandos disponíveis:</div>
             {COMMANDS.map((cmd) => (
