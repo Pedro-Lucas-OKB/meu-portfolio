@@ -41,6 +41,50 @@ Não introduzir novas cores fora dessa paleta sem atualizar esta tabela primeiro
   - Corpo de texto: peso 400
   - Labels/eyebrows/metadados: peso 500, tamanho menor (~12–13px), cor `--text-muted`
 
+## Espaçamento
+Sempre usar a escala abaixo (múltiplos de 4px) — nunca valores soltos tipo
+`18px`, `22px`, `30px`. Se um espaçamento "quase serve" mas não é exato,
+usar o valor da escala mais próximo, não inventar um intermediário.
+ 
+| Token | Valor | Uso típico |
+|---|---|---|
+| `--space-1` | `4px` | espaço interno mínimo (entre ícone e texto, por ex.) |
+| `--space-2` | `8px` | espaço entre elementos muito próximos (tag + tag) |
+| `--space-3` | `12px` | padding interno pequeno |
+| `--space-4` | `16px` | espaçamento padrão entre elementos de um mesmo bloco |
+| `--space-6` | `24px` | padding interno de cards/painéis |
+| `--space-8` | `32px` | espaço entre blocos dentro de uma seção |
+| `--space-12` | `48px` | espaço entre seções (`sobre`, `projetos`, `contato`) |
+| `--space-16` | `64px` | padding vertical de uma seção inteira |
+ 
+## Escala de tamanho de texto
+Também fixa, sem valores soltos:
+ 
+| Token | Valor | Uso |
+|---|---|---|
+| `--text-xs` | `12px` | metadados, labels, tags |
+| `--text-sm` | `14px` | texto secundário, botões |
+| `--text-base` | `16px` | corpo de texto padrão |
+| `--text-lg` | `20px` | subtítulos |
+| `--text-xl` | `28px` | títulos de seção |
+| `--text-2xl` | `40px` | título principal do hero |
+ 
+`line-height` padrão: `1.5` pra corpo de texto, `1.2` pra títulos.
+ 
+## Alinhamento e consistência entre componentes
+- Todo container de seção usa o **mesmo `max-width`** e o **mesmo padding
+  lateral** (defina uma vez, ex: um wrapper `.container` ou componente
+  `<Section>`, reaproveitado em todo lugar — não repetir o valor em cada
+  componente).
+- Cards/painéis do mesmo tipo (ex: os itens da listagem de projetos) devem
+  ter o mesmo padding interno, mesmo `border-radius`, mesma altura de
+  cabeçalho — se um ficou diferente dos outros, é bug, não variação de design.
+- Textos do mesmo papel semântico (todos os títulos de seção, por exemplo)
+  usam sempre o mesmo token de `--text-*` — nunca um título de seção com
+  tamanho custom só porque "ficou melhor assim".
+- Testar visualmente pelo menos em três larguras: mobile (~375px), tablet
+  (~768px) e desktop (~1200px) antes de considerar um componente pronto.
+
 ## Layout e estrutura
 - **Hero**: janela de terminal (barra com "semáforo" de três pontos + título),
   com efeito de digitação único no carregamento (não repetir a animação depois).
