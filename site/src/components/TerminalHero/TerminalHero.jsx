@@ -6,6 +6,7 @@ const ROLE = 'Desenvolvedor Back-end .NET'
 
 const COMMANDS = [
   { id: 'sobre', label: 'cd ./sobre' },
+  { id: 'skills', label: 'ls ./skills' },
   { id: 'projetos', label: 'ls ./projetos' },
   { id: 'contato', label: 'cat contato.md' },
 ]
