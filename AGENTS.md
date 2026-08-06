@@ -56,6 +56,11 @@ trabalhar, não *o quê*.
 - `design-tokens` — antes de criar/editar qualquer componente visual (React/CSS)
 - `git-conventions` — antes de commits, branches, tags ou PRs
 
+## Skills recomendadas (instaladas em `.agents/skills/`)
+- `vercel-react-best-practices` — ao escrever/revisar código React (performance)
+- `frontend-design` — ao criar/reformular UI (direção visual)
+- `find-skills` — para descobrir novas skills sob demanda
+
 ## Tarefas priorizadas (v1)
 1. ~~Criar projeto Vite~~ (feito)
 2. Portar conteúdo/visual de `local_files/index.html` para componentes React:
