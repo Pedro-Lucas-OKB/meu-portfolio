@@ -45,33 +45,6 @@ const COMMITS = [
   },
 ]
 
-function railFor(index) {
-  if (index === 0) {
-    return (
-      <>
-        <span className={styles.node}>*</span>
-        <span className={styles.vline} />
-      </>
-    )
-  }
-  if (index === 1) {
-    return (
-      <>
-        <div className={styles.railRow}>
-          <span className={styles.vchar}>|</span>
-          <span className={styles.node}>*</span>
-        </div>
-        <div className={styles.railRow}>
-          <span className={styles.vchar}>|</span>
-          <span className={styles.join}>/</span>
-        </div>
-        <span className={styles.vline} />
-      </>
-    )
-  }
-  return <span className={styles.node}>*</span>
-}
-
 function Experience() {
   const [open, setOpen] = useState(COMMITS[0].hash)
 
@@ -84,12 +57,12 @@ function Experience() {
         <h2>git log --graph --all --decorate</h2>
       </div>
       <div className={styles.log}>
-        {COMMITS.map((commit, index) => {
+        {COMMITS.map((commit) => {
           const isOpen = open === commit.hash
           return (
             <article className={styles.commit} key={commit.hash}>
               <div className={styles.rail} aria-hidden="true">
-                {railFor(index)}
+                <span className={styles.node}>*</span>
               </div>
               <div className={styles.content}>
                 <button
