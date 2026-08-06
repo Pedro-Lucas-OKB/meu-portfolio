@@ -1,24 +1,24 @@
 .section {
-  padding: 40px 0;
+  padding: var(--space-12) 0;
   border-top: 1px solid var(--border);
 }
 
 .sectionHead {
   display: flex;
   align-items: baseline;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
 }
 
 .sectionHead h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: var(--text-lg);
   letter-spacing: 0.5px;
 }
 
 .prompt {
   color: var(--accent-sage);
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 .body {
@@ -29,5 +29,5 @@
 }
 
 .body + .body {
-  margin-top: 24px;
+  margin-top: var(--space-6);
 }

@@ -1,5 +1,5 @@
 .hero {
-  padding: 56px 0 32px;
+  padding: var(--space-16) 0 var(--space-8);
 }
 
 .term {
@@ -13,8 +13,8 @@
 .termBar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
   background: var(--bg-panel-soft);
   border-bottom: 1px solid var(--border);
 }
@@ -27,14 +27,14 @@
 }
 
 .termTitle {
-  margin-left: 8px;
+  margin-left: var(--space-2);
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 
 .termBody {
-  padding: 24px 20px 28px;
-  font-size: 15px;
+  padding: var(--space-6) var(--space-4) var(--space-6);
+  font-size: var(--text-sm);
 }
 
 .line {
@@ -57,28 +57,28 @@
 
 .output {
   color: var(--text);
-  font-size: clamp(24px, 5vw, 40px);
+  font-size: clamp(var(--text-xl), 5vw, var(--text-2xl));
   font-weight: 800;
   line-height: 1.2;
-  margin: 10px 0 0;
+  margin: var(--space-3) 0 0;
 }
 
 .role {
   color: var(--text-muted);
-  font-size: 15px;
-  margin: 8px 0 0;
+  font-size: var(--text-sm);
+  margin: var(--space-2) 0 0;
 }
 
 .commands {
-  margin-top: 20px;
-  padding-top: 16px;
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
   border-top: 1px dashed var(--border);
 }
 
 .hint {
   color: var(--text-muted);
-  font-size: 13px;
-  margin-bottom: 8px;
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-2);
 }
 
 .cmdBtn {
@@ -89,13 +89,13 @@
   border: none;
   color: var(--text);
   font-family: inherit;
-  font-size: 14px;
-  padding: 6px 0;
+  font-size: var(--text-sm);
+  padding: var(--space-2) 0;
   cursor: pointer;
 }
 
 .cmdBtn .prompt {
-  margin-right: 6px;
+  margin-right: var(--space-2);
 }
 
 .cmdBtn:hover,

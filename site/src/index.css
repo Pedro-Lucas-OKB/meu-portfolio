@@ -10,6 +10,22 @@
   --term-dot: #40414f;
   --radius: 6px;
 
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --text-2xl: 40px;
+
   font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
@@ -25,7 +41,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 a {
@@ -48,17 +64,11 @@ textarea:focus-visible {
 .wrap {
   max-width: 760px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
 }
 
 section[id] {
-  scroll-margin-top: 64px;
-}
-
-@media (max-width: 640px) {
-  section[id] {
-    scroll-margin-top: 56px;
-  }
+  scroll-margin-top: var(--space-16);
 }
 
 @media (prefers-reduced-motion: reduce) {
