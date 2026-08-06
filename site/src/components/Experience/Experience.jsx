@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SectionTitle from '../SectionTitle/SectionTitle.jsx'
 import styles from './Experience.module.css'
 
 const COMMITS = [
@@ -61,10 +62,7 @@ function Experience() {
 
   return (
     <section id="experiencias" className={styles.section}>
-      <div className={styles.sectionHead}>
-        <span className={styles.prompt}>$</span>
-        <h2>git log ./experiencias</h2>
-      </div>
+      <SectionTitle command="git log ./experiencias" />
       <div className={styles.log}>
         {COMMITS.map((commit) => {
           const isOpen = open.has(commit.hash)

@@ -1,3 +1,4 @@
+import SectionTitle from '../SectionTitle/SectionTitle.jsx'
 import styles from './Skills.module.css'
 
 const SKILL_GROUPS = [
@@ -30,10 +31,7 @@ const SKILL_GROUPS = [
 function Skills() {
   return (
     <section id="skills" className={styles.section}>
-      <div className={styles.sectionHead}>
-        <span className={styles.prompt}>$</span>
-        <h2>ls ./skills</h2>
-      </div>
+      <SectionTitle command="ls ./skills" />
       {SKILL_GROUPS.map((group) => (
         <div className={styles.group} key={group.label}>
           <p className={styles.groupLabel}>{group.label}</p>
