@@ -1,0 +1,52 @@
+.section {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sectionHead h2 {
+  margin: 0;
+  font-size: 20px;
+  letter-spacing: 0.5px;
+}
+
+.prompt {
+  color: var(--accent-sage);
+  font-size: 14px;
+}
+
+.group {
+  margin-bottom: 16px;
+}
+
+.groupLabel {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--accent-violet);
+}
+
+.note {
+  color: var(--text-muted);
+  font-size: 13px;
+  margin: 20px 0 0;
+}

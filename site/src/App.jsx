@@ -1,5 +1,6 @@
 import TerminalHero from './components/TerminalHero/TerminalHero.jsx'
 import About from './components/About/About.jsx'
+import Skills from './components/Skills/Skills.jsx'
 import Projects from './components/Projects/Projects.jsx'
 import ContactForm from './components/ContactForm/ContactForm.jsx'
 import Footer from './components/Footer/Footer.jsx'
@@ -10,6 +11,7 @@ function App() {
       <main>
         <TerminalHero />
         <About />
+        <Skills />
         <Projects />
         <ContactForm />
       </main>
