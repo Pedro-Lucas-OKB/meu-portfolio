@@ -11,7 +11,9 @@ const NAV_LINKS = [
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeId, setActiveId] = useState(null)
   const toggleRef = useRef(null)
+  const headerRef = useRef(null)
 
   const close = () => {
     setMenuOpen(false)
@@ -27,8 +29,47 @@ function Header() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [menuOpen])
 
+  useEffect(() => {
+    const sections = NAV_LINKS.map((link) => document.getElementById(link.id))
+    const scrollMargin = sections.reduce((max, section) => {
+      if (!section) return max
+      return Math.max(max, parseFloat(getComputedStyle(section).scrollMarginTop) || 0)
+    }, 0)
+
+    const update = () => {
+      const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0
+      const threshold = (scrollMargin > 0 ? scrollMargin : headerHeight) + 2
+      let current = null
+      for (const section of sections) {
+        if (section && section.getBoundingClientRect().top <= threshold) {
+          current = section.id
+        } else {
+          break
+        }
+      }
+      setActiveId((prev) => (prev === current ? prev : current))
+    }
+
+    update()
+    let ticking = false
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        update()
+        ticking = false
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
   return (
-    <header id="top" className={styles.header}>
+    <header id="top" ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
         <a className={styles.brand} href="#terminal">
           pedro-lucas@portfolio: ~
@@ -50,7 +91,13 @@ function Header() {
           aria-label="Navegação principal"
         >
           {NAV_LINKS.map((link) => (
-            <a key={link.id} href={`#${link.id}`} onClick={() => setMenuOpen(false)}>
+            <a
+              key={link.id}
+              href={`#${link.id}`}
+              aria-current={link.id === activeId ? 'true' : undefined}
+              className={link.id === activeId ? styles.active : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
               {link.label}
             </a>
           ))}

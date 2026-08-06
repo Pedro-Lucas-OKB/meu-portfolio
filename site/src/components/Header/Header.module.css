@@ -44,6 +44,10 @@
   text-decoration: none;
 }
 
+.nav a.active {
+  color: var(--accent-sage);
+}
+
 .toggle {
   display: none;
   align-items: center;
