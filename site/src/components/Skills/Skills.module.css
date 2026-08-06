@@ -3,25 +3,6 @@
   border-top: 1px solid var(--border);
 }
 
-.sectionHead {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
-}
-
-.sectionHead h2 {
-  margin: 0;
-  font-size: var(--text-lg);
-  letter-spacing: 0.5px;
-  line-height: 1.2;
-}
-
-.prompt {
-  color: var(--accent-sage);
-  font-size: var(--text-sm);
-}
-
 .group {
   margin-bottom: var(--space-4);
 }

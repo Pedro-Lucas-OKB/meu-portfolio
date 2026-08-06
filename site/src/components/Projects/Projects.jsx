@@ -1,3 +1,4 @@
+import SectionTitle from '../SectionTitle/SectionTitle.jsx'
 import styles from './Projects.module.css'
 
 const PROJECTS = [
@@ -27,10 +28,7 @@ const PROJECTS = [
 function Projects() {
   return (
     <section id="projetos" className={styles.section}>
-      <div className={styles.sectionHead}>
-        <span className={styles.prompt}>$</span>
-        <h2>ls -la ./projetos</h2>
-      </div>
+      <SectionTitle command="ls -la ./projetos" />
       <div className={styles.listing}>
         <div className={styles.listingHead}>
           <span>permissões</span>

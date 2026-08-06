@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SectionTitle from '../SectionTitle/SectionTitle.jsx'
 import styles from './ContactForm.module.css'
 import { MailIcon, LinkedinIcon, GithubIcon } from '../Icons/Icons.jsx'
 
@@ -12,10 +13,7 @@ function ContactForm() {
 
   return (
     <section id="contato" className={styles.section}>
-      <div className={styles.sectionHead}>
-        <span className={styles.prompt}>$</span>
-        <h2>cat contato.md</h2>
-      </div>
+      <SectionTitle command="cat contato.md" />
       <p className={styles.contactHint}>contato direto:</p>
       <div className={styles.contacts}>
         <div className={styles.contactRow}>
