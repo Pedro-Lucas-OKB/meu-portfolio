@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styles from './ContactForm.module.css'
+import { MailIcon, LinkedinIcon, GithubIcon } from '../Icons/Icons.jsx'
 
 function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
@@ -18,17 +19,26 @@ function ContactForm() {
       <p className={styles.contactHint}>contato direto:</p>
       <div className={styles.contacts}>
         <div className={styles.contactRow}>
-          <span className={styles.contactLabel}>email</span>
+          <span className={styles.contactLabel}>
+            <MailIcon className={styles.contactIcon} />
+            email
+          </span>
           <a href="mailto:pedrolucasep5100@gmail.com">pedrolucasep5100@gmail.com</a>
         </div>
         <div className={styles.contactRow}>
-          <span className={styles.contactLabel}>linkedin</span>
+          <span className={styles.contactLabel}>
+            <LinkedinIcon className={styles.contactIcon} />
+            linkedin
+          </span>
           <a href="https://linkedin.com/in/pedrolucas-dev" target="_blank" rel="noopener">
             linkedin.com/in/pedrolucas-dev
           </a>
         </div>
         <div className={styles.contactRow}>
-          <span className={styles.contactLabel}>github</span>
+          <span className={styles.contactLabel}>
+            <GithubIcon className={styles.contactIcon} />
+            github
+          </span>
           <a href="https://github.com/pedro-lucas-okb" target="_blank" rel="noopener">
             github.com/pedro-lucas-okb
           </a>

@@ -8,3 +8,25 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.linkIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--accent-sage);
+}
+
+.sep {
+  color: var(--border);
+}
