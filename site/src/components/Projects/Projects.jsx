@@ -2,25 +2,25 @@ import styles from './Projects.module.css'
 
 const PROJECTS = [
   {
-    name: 'simplified-bank/',
-    description:
-      'API de transações financeiras com 13 endpoints em Clean Architecture. Row versioning no SQL Server pra resolver concorrência em transações simultâneas, JWT e senhas criptografadas.',
-    tags: ['C#', '.NET', 'SQL Server', 'DDD'],
-    href: 'https://github.com/pedro-lucas-okb',
-  },
-  {
     name: 'ecommerce-order-processing/',
     description:
       'Microsserviços com processamento assíncrono via RabbitMQ, separando pedidos em workers de pagamento, estoque e notificação. API com ASP.NET Core Minimal APIs e EF Core + PostgreSQL. CI/CD com GitHub Actions.',
     tags: ['C#', 'RabbitMQ', 'PostgreSQL', 'Docker'],
-    href: 'https://github.com/pedro-lucas-okb',
+    href: 'https://github.com/Pedro-Lucas-OKB/rabbitmq-ecommerce-order-processing',
+  },
+  {
+    name: 'simplified-bank/',
+    description:
+      'API de transações financeiras com 13 endpoints em Clean Architecture. Row versioning no SQL Server pra resolver concorrência em transações simultâneas, JWT e senhas criptografadas.',
+    tags: ['C#', '.NET', 'SQL Server', 'DDD'],
+    href: 'https://github.com/Pedro-Lucas-OKB/simplified-bank',
   },
   {
     name: 'este-portfolio/',
     description:
       'Site estático hospedado na AWS (S3 + CloudFront), com formulário de contato via Lambda em C# e SES.',
     tags: ['HTML/CSS/JS', 'AWS'],
-    href: '#',
+    href: 'https://github.com/Pedro-Lucas-OKB/meu-portifolio',
   },
 ]
 
