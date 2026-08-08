@@ -7,6 +7,9 @@ data "aws_caller_identity" "current" {}
 locals {
   role_name = "${var.project_name}-gh-actions"
 
+  # Workflow que tem permissão de assumir a role (definido também no trust policy).
+  github_workflow_ref = "${var.github_repo}/.github/workflows/deploy.yml@refs/heads/main"
+
   # ARNs do bucket do site e da distribuição CloudFront (criados em infra/site).
   site_bucket_arn         = "arn:aws:s3:::${var.site_bucket}"
   site_bucket_objects_arn = "arn:aws:s3:::${var.site_bucket}/*"
@@ -23,8 +26,8 @@ resource "aws_iam_openid_connect_provider" "github" {
 }
 
 # Role que o workflow assume via AssumeRoleWithWebIdentity. O trust policy
-# restringe a autenticação a este repositório especificamente (qualquer
-# branch/ref do repo), e não a qualquer repo do GitHub.
+# restringe a autenticação a este repositório, apenas no ref da main e apenas
+# ao workflow deploy.yml (não a qualquer workflow/branch/tag do repo).
 resource "aws_iam_role" "github_actions" {
   name = local.role_name
   assume_role_policy = jsonencode({
@@ -37,10 +40,11 @@ resource "aws_iam_role" "github_actions" {
       Action = "sts:AssumeRoleWithWebIdentity"
       Condition = {
         StringEquals = {
-          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
+          "token.actions.githubusercontent.com:aud"              = "sts.amazonaws.com"
+          "token.actions.githubusercontent.com:job_workflow_ref" = local.github_workflow_ref
         }
         StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:*"
+          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:ref:refs/heads/main"
         }
       }
     }]
