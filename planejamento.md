@@ -85,16 +85,20 @@ meu-portfolio/
 13. Animações: `whoami` no load do hero + títulos de seção digitam uma vez no scroll — ambas com fallback `prefers-reduced-motion`.
 14. Scroll-spy no header: link ativo em sage, `aria-current="true"`, nenhum ativo no topo.
 15. **Terraform** escolhido pra infra, com **lock nativo do S3** (`use_lockfile`), sem DynamoDB.
-16. Estrutura de infra simplificada: `infra/bootstrap/` + `infra/site/`, sem pasta `modules/`.
+16. Estrutura de infra simplificada: `infra/bootstrap/` + `infra/site/` + `infra/oidc/`, sem pasta `modules/`.
 17. Conta AWS no **Paid Plan** (evita fechamento automático em 6 meses do Free Plan).
+18. CI/CD via GitHub Actions autenticando por **OIDC** (sem access key fixa); role com permissão mínima (S3 list/put/delete no bucket do site + `cloudfront:CreateInvalidation`); trust policy restrita à `main` e ao workflow `deploy.yml`.
+19. **CI nunca aplica Terraform automaticamente** — mudanças de infraestrutura continuam manuais (`terraform apply` por módulo, com confirmação), só o deploy do site é automático.
+20. **Lição registrada**: repositórios GitHub criados após 15/07/2026 recebem o `sub` claim *imutável* do OIDC (`repo:OWNER@OWNER_ID/REPO@REPO_ID:...`, com IDs numéricos), não o formato legado por nome. Trust policies de OIDC precisam usar esse formato — descoberto via um workflow de debug temporário, removido após confirmar.
 
 ## Infra provisionada (estado real, ago/2026)
-- Bucket de state do Terraform: `pedrolucas-portfolio-tfstate-<ACCOUNT_ID>` (Account ID omitido de propósito — ver `terraform output` localmente para o valor real)
+- Bucket de state do Terraform: `pedrolucas-portfolio-tfstate-<ACCOUNT_ID>` (ver `terraform output` localmente)
 - Bucket do site: `pedrolucas.dev.br`
 - CloudFront distribution ID: `E24R25N80WOKZ9`
 - CloudFront domain: `d3vri31xkbbzun.cloudfront.net`
 - Hosted zone Route 53 criada; nameservers já atualizados no Registro.br
-- Deploy manual validado (`npm run build` + `aws s3 sync` + invalidação) — site no ar
+- Módulo `infra/oidc/`: OIDC Identity Provider do GitHub + role `pedrolucas-portfolio-gh-actions` (permissão mínima, trust restrita à `main` + `deploy.yml`)
+- **Deploy automático no ar**: push na `main` → lint → build → OIDC → sync S3 → invalidação CloudFront
 
 ## Status atual
 - [x] v1 completo: header com scroll-spy, hero, sobre, skills, experiências, projetos, contato (form fake), footer, animações, favicon, acessibilidade básica, responsividade
@@ -103,6 +107,8 @@ meu-portfolio/
 - [x] Domínio `pedrolucas.dev.br` registrado e DNS delegado pro Route 53
 - [x] Bootstrap do Terraform aplicado (bucket de state, sem DynamoDB)
 - [x] Infra principal aplicada: S3 + CloudFront + ACM + Route 53 — **site no ar**
-- [x] Build enviado manualmente pro S3 e validado (CloudFront + domínio próprio)
-- [ ] Workflow de CI/CD (OIDC + `.github/workflows/deploy.yml`)
+- [x] Build enviado manualmente pro S3 e validado (primeira verificação, antes do CI/CD)
+- [x] Workflow de CI/CD (OIDC + `.github/workflows/deploy.yml`) — **deploy automático funcionando**
+- [x] README atualizado refletindo deploy e CI/CD reais (skill `create-readme`)
 - [ ] Lambda + API Gateway + SES para o formulário de contato (Fase 2)
+- [ ] Decidir destino das branches já mergeadas (apagar ou manter) — só com confirmação do usuário
