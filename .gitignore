@@ -9,6 +9,14 @@ local_files/
 node_modules/
 dist/
 
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+# .terraform.lock.hcl NÃO entra aqui — esse arquivo deve ser commitado
+# (trava as versões exatas dos providers, como um package-lock.json)
+
 # Editor / SO
 .DS_Store
 .vscode/*
