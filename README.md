@@ -1,26 +1,77 @@
-# Portfólio — Pedro Lucas Da Costa Vidal
+<div align="center">
+
+<img src="./site/public/favicon.svg" width="96" alt="Favicon do portfólio" />
+
+# Portfólio — Pedro Lucas
+
+*Dev Back-end .NET · C# · AWS · React*
+
+[![Site](https://img.shields.io/website?url=https%3A%2F%2Fpedrolucas.dev.br&style=flat-square&label=pedrolucas.dev.br)](https://pedrolucas.dev.br)
+[![Deploy](https://github.com/Pedro-Lucas-OKB/meu-portifolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Pedro-Lucas-OKB/meu-portifolio/actions/workflows/deploy.yml)
+[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-3c873a?style=flat-square)](https://nodejs.org)
+[![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.11-7b42bc?style=flat-square)](https://www.terraform.io)
+
+[Stack](#stack) • [Estrutura](#estrutura-de-pastas) • [Rodando localmente](#rodando-localmente) • [Deploy e CI/CD](#deploy-e-cicd) • [Roadmap](#roadmap)
+
+</div>
 
 Site portfólio pessoal de **Pedro Lucas da Costa Vidal**, desenvolvedor Back-end
 .NET (~2 anos de experiência) e líder de dev em um projeto com mais de 1300
 usuários potenciais. Graduado em Ciência da Computação pela UFC (2019–2026).
 
-O site apoia a candidatura a vagas de dev back-end .NET e, quando hospedado na
-AWS, demonstra habilidades práticas em cloud. A identidade visual segue uma
-estética de terminal "grounded" no C#/.NET (roxo) e Linux Mint (verde sálvia),
-com navegação por comandos (`cd ./sobre`, `ls ./projetos`, `cat contato.md`).
+O site está **no ar** em [pedrolucas.dev.br](https://pedrolucas.dev.br) e apoia a
+candidatura a vagas de dev back-end .NET. A identidade visual segue uma estética
+de terminal "grounded" no C#/.NET (roxo) e Linux Mint (verde sálvia), com
+navegação por comandos (`cd ./sobre`, `ls ./skills`, `cat contato.md`).
+
+> [!NOTE]
+> O deploy é 100% automático via GitHub Actions + AWS OIDC: a cada push na
+> `main`, o site é buildado e publicado sem nenhuma access key fixa.
 
 ## Stack
 
-- **React 19 + Vite** (SPA, build estático) em `site/`
+**Front-end** (`site/`)
+- **React 19 + Vite** (SPA, build estático)
 - **CSS Modules** por componente (um `.module.css` por componente)
-- **Design tokens** globais em `site/src/index.css` (`:root`)
-- **JetBrains Mono** (Google Fonts) como fonte única
-- Sem `react-router` (página única, navegação por âncora) e sem estado externo
+- **Design tokens** globais em `site/src/index.css` (`:root`) — cores, escala de
+  espaço (`--space-*`) e texto (`--text-*`)
+- **JetBrains Mono** como fonte única (referência à IDE Rider)
+- Sem `react-router` (página única, navegação por âncora + scroll-spy) e sem
+  estado externo (useState/useEffect bastam)
+- Ícones **SVG inline** em `src/components/Icons` (sem biblioteca de ícones)
 - Lint com **oxlint** (não ESLint); sem suíte de testes
 
-## Como rodar localmente
+**Infraestrutura e CI/CD**
+- **Terraform** (infra como código) em `infra/`
+- **AWS**: S3 (estáticos) + CloudFront (CDN/HTTPS) + ACM (certificado) + Route 53 (DNS)
+- **GitHub Actions** com autenticação **OIDC** (sem access key como secret)
 
-Pré-requisito: Node.js e npm instalados.
+## Estrutura de pastas
+
+```
+meu-portifolio/
+├── site/                       # SPA React 19 + Vite
+│   ├── src/
+│   │   ├── components/         # Header, TerminalHero, About, Skills, Experience,
+│   │   │                       # Projects, ContactForm, Footer, SectionTitle, Icons
+│   │   ├── App.jsx
+│   │   └── index.css           # design tokens globais (:root)
+│   ├── public/                 # favicon.svg, icons.svg
+│   └── package.json
+├── infra/                      # Terraform (infra como código)
+│   ├── bootstrap/              # bucket de state do Terraform (aplicado 1x)
+│   ├── site/                   # S3 + CloudFront + ACM + Route 53
+│   └── oidc/                   # IAM OIDC provider + role de deploy do CI/CD
+├── .github/workflows/          # deploy.yml — CI/CD (push na main)
+├── AGENTS.md                   # instruções para o agente de IA
+├── planejamento.md             # escopo, decisões e conteúdo do projeto
+└── README.md
+```
+
+## Rodando localmente
+
+Pré-requisito: Node.js 20+ e npm.
 
 ```bash
 cd site
@@ -28,7 +79,7 @@ npm install     # instalar dependências
 npm run dev     # servidor de desenvolvimento (Vite)
 ```
 
-Build de produção e preview:
+Build de produção, preview e lint:
 
 ```bash
 npm run build     # gera o build estático em dist/
@@ -37,41 +88,42 @@ npm run lint      # linter (oxlint)
 ```
 
 Não há suíte de testes. Verificação: `lint` → `build` → conferência visual no
-navegador (incluindo viewport mobile no DevTools).
+navegador (incluindo viewport mobile ~375px, ~768px e ~1200px no DevTools).
 
-## Estrutura de pastas
+## Deploy e CI/CD
 
+A infraestrutura foi provisionada com Terraform (módulos em `infra/`), cada um
+com seu próprio state num bucket S3 versionado.
+
+O deploy do site é **automático**: um push na `main` dispara o workflow
+`.github/workflows/deploy.yml`, que:
+
+1. instala dependências com `npm ci` (Node 20, cache de dependências);
+2. roda o lint (oxlint) e o build (`vite build`);
+3. autentica na AWS via **OIDC** — o GitHub assume a role
+   `pedrolucas-portfolio-gh-actions` sem access key fixa (trust policy restrita
+   ao repo, à branch `main` e ao próprio workflow);
+4. sincroniza o `dist/` com o bucket S3 (`aws s3 sync --delete`);
+5. invalida o cache do CloudFront para o site atualizar na hora.
+
+```text
+push na main → lint/build (falha para o deploy) → assume role via OIDC
+            → s3 sync → invalidação CloudFront → pedrolucas.dev.br atualizado
 ```
-meu-portifolio/
-├── site/
-│   ├── src/
-│   │   ├── components/   # TerminalHero, About, Projects, ContactForm, Footer
-│   │   ├── App.jsx
-│   │   └── index.css     # design tokens globais (:root)
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
-├── infra/                # planejado: S3 + CloudFront + ACM + Route 53
-├── .github/workflows/    # planejado: pipeline de CI/CD
-├── planejamento.md       # escopo, decisões e conteúdo do projeto
-└── README.md
-```
 
-Componentes já portados: `TerminalHero`, `About`, `Projects`, `ContactForm` e
-`Footer`. O formulário de contato é apenas visual (fake submit) por enquanto.
+> [!NOTE]
+> O CI/CD não aplica Terraform: mudanças de infraestrutura (novos recursos AWS,
+> políticas IAM, etc.) são feitas manualmente com `terraform apply` em cada
+> módulo de `infra/`. Isso evita que um push altere a infra por engano.
 
-## Próximos passos (roadmap)
+## Roadmap
 
 - [x] Port do protótipo para componentes React (v1)
-- [x] Favicon condizente com a identidade visual
-- [ ] Revisão de responsividade mobile
-- [ ] Validação de acessibilidade básica (contraste, navegação por teclado, foco)
-- [ ] **Deploy na AWS** — S3 (estáticos) + CloudFront (CDN/HTTPS) + ACM
-      (certificado), com DNS no Route 53, para o domínio `pedrolucas.dev.br`
-- [ ] **CI/CD** — GitHub Actions: build + sync com S3 + invalidação de cache do
-      CloudFront a cada push na main
+- [x] Deploy na AWS: S3 + CloudFront + ACM + Route 53 em `pedrolucas.dev.br`
+- [x] CI/CD: GitHub Actions com autenticação OIDC (build + sync + invalidação)
 - [ ] **Fase 2** — formulário de contato funcional via API Gateway + Lambda
       (C#/.NET) + SES
+- [ ] Trocar para Node 24 no runner quando o suporte ao Node 20 for encerrado
 
 ## Contato
 
