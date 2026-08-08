@@ -90,6 +90,10 @@ meu-portfolio/
 18. CI/CD via GitHub Actions autenticando por **OIDC** (sem access key fixa); role com permissão mínima (S3 list/put/delete no bucket do site + `cloudfront:CreateInvalidation`); trust policy restrita à `main` e ao workflow `deploy.yml`.
 19. **CI nunca aplica Terraform automaticamente** — mudanças de infraestrutura continuam manuais (`terraform apply` por módulo, com confirmação), só o deploy do site é automático.
 20. **Lição registrada**: repositórios GitHub criados após 15/07/2026 recebem o `sub` claim *imutável* do OIDC (`repo:OWNER@OWNER_ID/REPO@REPO_ID:...`, com IDs numéricos), não o formato legado por nome. Trust policies de OIDC precisam usar esse formato — descoberto via um workflow de debug temporário, removido após confirmar.
+21. **Fase 2**: Lambda em **C#/.NET 10** (`dotnet10`, AL2023 — LTS até nov/2028; .NET 8 deprecia em nov/2026) — **o código .NET é implementado pelo Pedro**, o agente só auxilia.
+22. **Fase 2**: publicar o código da Lambda via **CI** (`dotnet publish` → zip → `aws lambda update-function-code`), espelhando o deploy do site; infra fica no Terraform (`infra/contact/`).
+23. **Fase 2**: SES com **identidade de e-mail verificada** (`pedrolucasep5100@gmail.com`) em modo sandbox — suficiente porque o destino é sempre o próprio e-mail do Pedro.
+24. **Fase 2**: frontend chama a **URL direta do API Gateway** (build-time env `VITE_CONTACT_API_URL`), sem rota `/api` no CloudFront.
 
 ## Infra provisionada (estado real, ago/2026)
 - Bucket de state do Terraform: `pedrolucas-portfolio-tfstate-<ACCOUNT_ID>` (ver `terraform output` localmente)
@@ -99,6 +103,67 @@ meu-portfolio/
 - Hosted zone Route 53 criada; nameservers já atualizados no Registro.br
 - Módulo `infra/oidc/`: OIDC Identity Provider do GitHub + role `pedrolucas-portfolio-gh-actions` (permissão mínima, trust restrita à `main` + `deploy.yml`)
 - **Deploy automático no ar**: push na `main` → lint → build → OIDC → sync S3 → invalidação CloudFront
+
+## Fase 2 — planejamento do formulário de contato
+
+> Implementação do código C# da Lambda é **do Pedro** (sua stack). O agente
+> auxilia em arquitetura, infra (Terraform), CI/CD, frontend e integração.
+
+### Fluxo
+```
+form (React) → POST JSON → API Gateway (POST /contato, CORS) → Lambda C#/.NET 10
+             → valida → SES SendEmail → resposta 200/400
+```
+
+### Arquitetura (recursos AWS)
+- **API Gateway REST**: recurso `POST /contato` (JSON) + CORS (origem
+  `https://pedrolucas.dev.br`) + throttling (rate/burst) + deployment/stage.
+- **Lambda** `contact-form`: runtime `dotnet10`, ARM64, AL2023, timeout ~10s,
+  memória ~256MB. Código inicial é um placeholder (o CI publica o código real).
+- **IAM role da Lambda**: `ses:SendEmail` (na identidade SES) + CloudWatch logs
+  (`AWSLambdaBasicExecutionRole`).
+- **SES**: identidade de **e-mail** verificada `pedrolucasep5100@gmail.com` (modo
+  sandbox é suficiente, pois o destino é sempre esse e-mail). Envio From/To para
+  o mesmo endereço.
+
+### Infra — novo módulo `infra/contact/` (Terraform, apply manual)
+Mesmo padrão dos demais módulos (backend `contact/terraform.tfstate`, lock S3,
+provider AWS ~5.92). Cria API Gateway, Lambda, role/policy, identidade SES e a
+permissão da API invocar a Lambda. `lifecycle { ignore_changes }` no código da
+função para o Terraform não reverter o que o CI publica.
+
+### CI/CD
+- Estender a role do CI (`infra/oidc/`) com `lambda:UpdateFunctionCode` escopado
+  à função de contato (apply manual + confirmação).
+- Job no workflow: setup .NET → `dotnet publish -c Release` →
+  zip → `aws lambda update-function-code`.
+- `VITE_CONTACT_API_URL` como **variável** do GitHub Actions (não é secret),
+  injetada no build do site.
+
+### Frontend (React)
+- `ContactForm.jsx`: POST real para a API, estados idle/loading/success/error,
+  campo **honeypot** oculto (`website`) e fallback do `mailto:`.
+- Nota do formulário deixa de mencionar "fake" após a Fase 2 no ar.
+
+### Contrato da API (para o Pedro implementar na Lambda)
+- `POST /contato` → body `{ "nome": string, "email": string, "mensagem": string, "website": string }`
+- Validação: `nome` 1–120; `email` válido e ≤ 254; `mensagem` 1–5000;
+  `website` deve vir **vazio** (honeypot → descartar em silêncio); campos
+  desconhecidos ignorados.
+- Respostas (com headers CORS):
+  - `200`/`202`: `{ "message": "Mensagem enviada." }`
+  - `400`: `{ "errors": ["..."] }`
+  - `500`: `{ "message": "Erro interno." }`
+- E-mail via SES: From/To `pedrolucasep5100@gmail.com`, subject
+  `Contato do portfólio: <nome>`, corpo com nome/email/mensagem.
+
+### Checklist de implementação
+- [ ] (Pedro) Projeto C# `functions/ContactForm/` (net10.0) conforme o contrato
+- [ ] (agente) Módulo `infra/contact/` + apply manual com confirmação
+- [ ] (agente) Estender role do CI (`lambda:UpdateFunctionCode`) + apply
+- [ ] (agente) Workflow CI para publicar a Lambda + variável da URL da API
+- [ ] (agente) Frontend: conectar `ContactForm` à API (estados + honeypot)
+- [ ] Verificar identidade SES (link no e-mail), teste ponta a ponta
 
 ## Status atual
 - [x] v1 completo: header com scroll-spy, hero, sobre, skills, experiências, projetos, contato (form fake), footer, animações, favicon, acessibilidade básica, responsividade
