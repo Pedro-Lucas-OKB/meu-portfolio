@@ -1,74 +1,84 @@
 # AGENTS.md — instruções para o agente de IA
 
-Contexto completo do projeto (conteúdo, decisões, escopo v1 vs Fase 2) está em
-`planejamento.md`. Leia antes de qualquer tarefa. Este arquivo é sobre *como*
-trabalhar, não *o quê*.
+Contexto completo do projeto (conteúdo, decisões, escopo v1 vs Fase 2, infra
+provisionada) está em `planejamento.md`. Leia antes de qualquer tarefa. Este
+arquivo é sobre *como* trabalhar, não *o quê*.
 
 ## Stack atual
 - Front-end: React 19 + Vite (SPA, build estático) em `site/`
 - Estilo: CSS Modules por componente (um `.module.css` por componente)
-- Design tokens globais em `site/src/index.css` (`:root`)
-- Sem `react-router` (página única, navegação por âncora) e sem gerenciador de
-  estado externo — useState/useEffect bastam
+- Design tokens globais em `site/src/index.css` (`:root`), incluindo escala
+  de espaço (`--space-*`) e texto (`--text-*`)
+- Sem `react-router` (página única, navegação por âncora + header sticky) e
+  sem gerenciador de estado externo — useState/useEffect bastam
+- Ícones: SVG inline em `src/components/Icons/Icons.jsx` — sem biblioteca externa
+- Infra: Terraform em `infra/bootstrap/` e `infra/site/` (sem submódulos)
+- Linter: **oxlint** (não ESLint), config em `site/.oxlintrc.json`
+- Sem suíte de testes — verificação é lint → build → checagem visual no navegador
 
 ## Estado atual (verifique antes de assumir o contrário)
-- Port do protótipo **concluído**: componentes em `site/src/components/`
-  (TerminalHero, About, Projects, ContactForm, Footer), cada um com `.module.css`.
-  Tokens de design já movidos para `site/src/index.css`; `site/index.html` já é
-  pt-BR com o nome completo no `<title>`.
-- Protótipo de referência (conteúdo + visual reais) é `local_files/index.html`.
-- `infra/` e `.github/workflows/` estão **vazios** — CI/CD e deploy ainda não
-  começaram. Não criar recursos AWS reais.
-- Repositório já tem commits na `main`. Trabalhar em branches de feature e só
+- Site React **completo e no ar**: `pedrolucas.dev.br`, servido via
+  CloudFront + S3, com HTTPS válido (ACM) e DNS no Route 53.
+- Infra provisionada por Terraform (`infra/bootstrap/` + `infra/site/`) —
+  ver IDs reais dos recursos em `planejamento.md`.
+- Deploy ainda é **manual** (`npm run build` + `aws s3 sync` + invalidação
+  do CloudFront) — CI/CD ainda não existe.
+- `.github/workflows/` está **vazio**.
+- Repositório tem commits na `main`. Trabalhar em branches de feature e só
   mergear/apagar branch com confirmação explícita do usuário.
 
 ## Comandos (rodar dentro de `site/`)
-- `npm install` — instalar dependências (projeto ainda não commitado)
-- `npm run dev` — servidor de desenvolvimento (Vite, porta padrão)
-- `npm run build` — build de produção para `dist/`
-- `npm run preview` — serve o build localmente
-- `npm run lint` — linter é **oxlint** (não ESLint), config em `.oxlintrc.json`
-- Não há framework de testes nem suíte — verificação é `lint` → `build` →
-  conferência visual no navegador, incluindo viewport mobile (DevTools)
+- `npm run dev` — servidor local
+- `npm run build` — build de produção (`dist/`)
+- `npm run preview` — preview do build
+- `npm run lint` — oxlint
+
+## Deploy manual (até o CI/CD existir)
+```
+cd site/
+npm run build
+aws s3 sync dist/ s3://pedrolucas.dev.br --delete
+aws cloudfront create-invalidation --distribution-id E24R25N80WOKZ9 --paths "/*"
+```
 
 ## Convenções
 - Um componente por pasta em `site/src/components/`, com seu próprio `.module.css`
-- Cores e espaçamentos **sempre** via `var(--token)` — nunca hardcodar hex num
-  componente. Paleta e tipografia definidas em `planejamento.md` e na skill
-  `design-tokens` (carregar essa skill antes de qualquer trabalho visual)
-- Fonte única: JetBrains Mono (via Google Fonts) — não misturar com sans/serif
+- Cores, espaçamentos e tamanhos de texto **sempre** via `var(--token)` —
+  nunca hardcodar valor solto (ver skill `design-tokens`)
+- Fonte única: JetBrains Mono — não misturar com sans/serif
 - Toda animação precisa respeitar `prefers-reduced-motion`
-- Commits pequenos e descritivos (Conventional Commits), um por tarefa — seguir
-  a skill `git-conventions` antes de qualquer commit
+- Commits pequenos e descritivos (Conventional Commits) — seguir a skill
+  `git-conventions` antes de qualquer commit
+- `local_files/index.html` (fora do controle de versão) é referência
+  histórica — o site real já foi portado pra componentes
 
-## O que NÃO fazer sem confirmar antes
-- Não mudar a paleta de cores ou a tipografia definidas em `planejamento.md`
-- Não implementar a Lambda de contato — é Fase 2, com planejamento próprio
-  ainda não escrito. Formulário fica só visual (fake submit)
-- Não decidir estrutura de infraestrutura AWS sozinho — seguir `planejamento.md`
-- Não commitar `local_files/` (protótipo + PDF do currículo, dados pessoais).
-  O `.gitignore` na raiz já exclui esse diretório, mas conferir o `git status`
-  antes de qualquer `git add` por segurança
-- **Nunca** mergear na `main` nem apagar uma branch por conta própria — deixar
-  a branch pronta e parar ali, aguardando o usuário conferir e pedir o merge
+## Regra crítica — branches, merge e infraestrutura
+**Nunca mergear na `main`, apagar branch, ou rodar `terraform apply`/
+`terraform destroy` por conta própria.** Deixar pronto e parar, aguardando
+confirmação explícita do usuário — mudanças de infraestrutura real na AWS
+geram custo e não são reversíveis como um `git revert`. Essa regra já foi
+violada uma vez (merge sem autorização) — não repetir.
+- Branches de feature: `feat/*`, `fix/*`, `style/*`, `chore/*`, `docs/*`.
 
 ## Skills obrigatórias
 - `design-tokens` — antes de criar/editar qualquer componente visual (React/CSS)
 - `git-conventions` — antes de commits, branches, tags ou PRs
+- `react-frontend` — antes de estruturar/revisar componentes React (evita
+  desalinhamento de tamanho/espaçamento entre componentes)
 
 ## Skills recomendadas (instaladas em `.agents/skills/`)
-- `vercel-react-best-practices` — ao escrever/revisar código React (performance)
-- `frontend-design` — ao criar/reformular UI (direção visual)
-- `find-skills` — para descobrir novas skills sob demanda
+- `vercel-react-best-practices` — performance; muitas regras são específicas
+  de Next.js/SSR e não se aplicam a este projeto (Vite SPA estática) —
+  aplicar só o que for relevante (bundle size, re-renders, lazy loading)
+- `frontend-design`
+- `find-skills`
 
-## Tarefas priorizadas (v1)
-1. ~~Criar projeto Vite~~ (feito)
-2. Portar conteúdo/visual de `local_files/index.html` para componentes React:
-   TerminalHero, About, Projects, ContactForm, Footer
-3. Mover os tokens de design (cores/tipografia) para `site/src/index.css`
-4. Revisar responsividade mobile
-5. Adicionar `favicon` simples condizente com a identidade visual
-6. Validar acessibilidade básica: contraste, navegação por teclado, foco visível
-7. Preparar `infra/` (S3 + CloudFront + ACM) — aguardar confirmação antes de
-   criar recursos reais na AWS
-8. Configurar CI/CD em `.github/workflows/` (build + deploy) — fase posterior
+## Tarefas priorizadas
+1. Configurar OIDC (IAM Identity Provider + Role) para o GitHub Actions
+   autenticar na AWS sem access key fixa
+2. Escrever `.github/workflows/deploy.yml`: build → sync com S3 →
+   invalidação do CloudFront, disparado em push na `main`
+3. Planejar a Fase 2: Lambda (C#) + API Gateway + SES para o formulário de
+   contato — aguardar planejamento específico antes de implementar
+4. Decidir com o usuário se as branches já mergeadas podem ser apagadas —
+   **não apagar sem confirmação**

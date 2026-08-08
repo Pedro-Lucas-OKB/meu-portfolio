@@ -5,7 +5,7 @@ Site portfólio pessoal para apoiar candidatura a vagas de dev back-end .NET,
 hospedado na AWS como demonstração prática de habilidades em cloud.
 
 ## Escopo v1 (MVP)
-- Site de uma página (hero, sobre, skills, experiências, projetos, contato)
+- Site de uma página (header sticky, hero, sobre, skills, experiências, projetos, contato)
 - Stack: **React + Vite** (SPA, build estático — decisão tomada para reforçar React no currículo)
 - Estilo: CSS Modules por componente, usando os tokens de design definidos abaixo
 - Deploy: build (`npm run build`) → S3 (arquivos estáticos) + CloudFront (CDN/HTTPS) + ACM (certificado)
@@ -20,12 +20,22 @@ hospedado na AWS como demonstração prática de habilidades em cloud.
 - Blog
 - CMS/admin
 - Banco de dados / comentários / contador de visitas
+- Subdomínio `www` — decidido que **não** vai ter (só o domínio raiz)
 
 ## Direção visual (tokens de design)
 - **Conceito**: estética de terminal, mas não genérica — grounded no C#/.NET (roxo) e Linux Mint (verde sálvia), não no clichê "preto + verde neon".
-- **Cores**: fundo `#14151c`, painel `#1c1e29`, texto `#e7e7ee`, texto secundário `#8b8fa3`, acento roxo `#8b7cf6`, acento sálvia `#6fcf97`, borda `#2c2e3d`.
+- **Cores**: fundo `#14151c`, painel `#1c1e29`, texto `#e7e7ee`, texto secundário `#8b8fa3`, acento roxo `#8b7cf6`, acento sálvia `#6fcf97`, borda `#2c2e3d`, grade de pontos de fundo `--bg-dot`.
 - **Tipografia**: JetBrains Mono em toda a página (títulos pesados, corpo mais leve) — referência direta à IDE que o Pedro usa (Rider).
-- **Estrutura/assinatura**: navegação como comandos de terminal reais (`cd sobre`, `ls projetos`, `cat contato.md`); projetos exibidos como listagem de diretório (`ls -la`); efeito de digitação único no carregamento do hero, respeitando `prefers-reduced-motion`.
+- **Escala de espaço/texto**: tokens `--space-1..16` e `--text-xs..2xl` aplicados em todos os componentes (ver `.opencode/skills/design-tokens/SKILL.md`).
+
+## Seções do site e suas metáforas
+- **Header**: sticky, marca `pedro-lucas@portfolio: ~` à esquerda, links de âncora à direita (com scroll-spy); colapsa num toggle "tag de terminal" no mobile.
+- **Hero (terminal)**: barra `pedro-lucas@portfolio: ~`; `whoami` digita o nome "Pedro Lucas" (peso 800); cargo estático abaixo; navegação por comandos (`cd sobre`, `ls skills`, `ls projetos`, `cat contato.md`).
+- **Skills**: `$ ls ./skills`, agrupada por categoria, só texto (sem logos, decisão do usuário).
+- **Experiências**: metáfora `$ git log ./experiências` — commits em acordeão, nós `*` alinhados à esquerda (sem barras de ramificação), badges de conquista todos em sage, expandido por padrão.
+- **Projetos**: listagem estilo `ls -la`.
+- **Contato**: ícones inline (SVG, sem dependência nova) + link alinhado à direita dentro de card full-width; formulário ainda não envia de verdade (Fase 2).
+- Títulos de seção (que já são comandos) digitam uma vez ao entrar no viewport (scroll), mesma linguagem do efeito do hero, com fallback `prefers-reduced-motion`.
 
 ## Conteúdo (fonte: currículo, ago/2026)
 - **Nome**: Pedro Lucas da Costa Vidal — usar nome completo em `<title>`/SEO; "Pedro Lucas" nos demais locais visuais (rodapé, etc.)
@@ -37,94 +47,62 @@ hospedado na AWS como demonstração prática de habilidades em cloud.
 ## Estrutura de pastas do repositório
 ```
 meu-portfolio/
+├── local_files/            # NÃO versionado (.gitignore) — material de referência
+│   ├── index.html           # protótipo original (visual/conteúdo)
+│   └── curriculo.pdf        # currículo (contém dados pessoais)
 ├── site/
 │   ├── src/
-│   │   ├── components/   # TerminalHero, About, Skills, Experience, Projects, ContactForm, Footer
+│   │   ├── components/   # TerminalHero, About, Skills, Experience, Projects, ContactForm, Footer, Icons
 │   │   ├── App.jsx
 │   │   └── index.css     # variáveis globais (:root com os tokens)
-│   ├── public/            # favicon.svg, icons.svg
-│   ├── index.html
+│   ├── public/            # favicon.svg
+│   ├── index.html         # entry point do Vite
 │   ├── package.json
 │   └── vite.config.js
-├── infra/                 # Terraform (S3, CloudFront, ACM, Route 53) — planejamento abaixo
-├── .github/workflows/      # pipeline de CI/CD (build + deploy)
+├── infra/
+│   ├── bootstrap/          # cria só o bucket de state do Terraform (aplicado 1x)
+│   └── site/               # S3 + CloudFront + ACM + Route 53 (sem submódulos)
+├── .github/workflows/      # pipeline de CI/CD (a escrever)
+├── .gitignore
 ├── planejamento.md         # este arquivo
 ├── AGENTS.md                # instruções pro agente de IA
 └── README.md
 ```
 
 ## Decisões já tomadas (não reabrir sem motivo)
-1. Stack: React + Vite (SPA), CSS Modules por componente — trocado de HTML puro para reforçar React no currículo.
-2. Paleta e tipografia definidas acima — não trocar sem decisão explícita.
+1. Stack: React + Vite (SPA), CSS Modules por componente.
+2. Paleta, tipografia e escala de espaço/texto definidas acima.
 3. Domínio comprado no Registro.br, DNS gerenciado no Route 53.
 4. Formulário de contato só vira funcional na Fase 2, via Lambda em C#.
-5. CI/CD via GitHub Actions para build + deploy automático.
-6. Infra declarada com **Terraform** (decidido em conjunto; ver seção de infra abaixo).
+5. CI/CD via GitHub Actions, autenticando na AWS via **OIDC** (sem access key fixa como secret).
+6. Seção de Skills sem logos, só texto.
+7. Experiências usa a metáfora `git log` (nós simples, sem barras de ramificação); badges de conquista sempre em sage.
+8. Ícones de contato são SVG inline (sem biblioteca de ícones); link de contato alinhado à direita dentro do card.
+9. Nunca mergear na `main`, apagar branch, nem rodar `terraform apply`/`destroy` sem confirmação explícita do usuário.
+10. Sem foto no site.
+11. Coluna centralizada (max-width 760px); fundo com grade de pontos sutil-média.
+12. Links de contato empilham no mobile (≤480px).
+13. Animações: `whoami` no load do hero + títulos de seção digitam uma vez no scroll — ambas com fallback `prefers-reduced-motion`.
+14. Scroll-spy no header: link ativo em sage, `aria-current="true"`, nenhum ativo no topo.
+15. **Terraform** escolhido pra infra, com **lock nativo do S3** (`use_lockfile`), sem DynamoDB.
+16. Estrutura de infra simplificada: `infra/bootstrap/` + `infra/site/`, sem pasta `modules/`.
+17. Conta AWS no **Paid Plan** (evita fechamento automático em 6 meses do Free Plan).
 
-## Infra — Planejamento (Terraform)
-
-Ferramenta escolhida: **Terraform** (IaC declarativo, padrão de mercado).
-Nenhum recurso AWS real é criado sem confirmação explícita do usuário (geram
-custo) e sem a conta AWS configurada. Credenciais vão como *secrets* do GitHub
-Actions, nunca commitadas.
-
-### Recursos a criar
-| Recurso | Detalhes |
-|---|---|
-| Bucket S3 (ex: `pedrolucas-dev-br`) | hosting estático do build (`site/dist/`), acesso via CloudFront OAC |
-| CloudFront | distribuição HTTPS com origem no S3, cache e invalidação |
-| ACM | certificado `pedrolucas.dev.br` e `www` na região `us-east-1` (obrigatória para CloudFront) |
-| Route 53 | hosted zone + registros alias A/AAAA do domínio raiz e `www` → CloudFront |
-
-### Estrutura do `infra/`
-```
-infra/
-├── main.tf          # provider AWS e recursos raiz
-├── variables.tf     # região, domínio, etc.
-├── outputs.tf       # bucket, distribution id
-└── modules/
-    ├── s3/
-    ├── cloudfront/
-    ├── acm/
-    └── route53/
-```
-
-### Estado do Terraform
-- Por enquanto: `terraform.tfstate` **local** (gitignored).
-- Evolução futura: backend S3 remoto + lock DynamoDB, junto do CI/CD.
-
-### Migração de DNS
-- Domínio `pedrolucas.dev.br` hoje no Registro.br.
-- Criar a hosted zone no Route 53 e apontar os servidores NS no Registro.br.
-
-### CI/CD (GitHub Actions) — `.github/workflows/deploy.yml`
-- Trigger: push na `main`.
-- Steps: `npm ci` → `npm run build` → `aws s3 sync site/dist/` pro bucket →
-  invalidação do cache do CloudFront.
-- `terraform apply` roda manualmente (plan no CI) até termos backend remoto.
-- Secrets no GitHub: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`,
-  `CLOUDFRONT_DISTRIBUTION_ID`, `S3_BUCKET`.
-
-### Ordem de execução (quando aprovado)
-1. Configurar conta AWS + credenciais (local e secrets do GitHub).
-2. Escrever o `infra/` (Terraform) e o workflow de CI/CD.
-3. `terraform init` + `terraform apply` (S3, CloudFront, ACM, Route 53).
-4. Migrar DNS no Registro.br para a hosted zone.
-5. Validar HTTPS, cache e redirect do `www`.
+## Infra provisionada (estado real, ago/2026)
+- Bucket de state do Terraform: `pedrolucas-portfolio-tfstate-<ACCOUNT_ID>` (Account ID omitido de propósito — ver `terraform output` localmente para o valor real)
+- Bucket do site: `pedrolucas.dev.br`
+- CloudFront distribution ID: `E24R25N80WOKZ9`
+- CloudFront domain: `d3vri31xkbbzun.cloudfront.net`
+- Hosted zone Route 53 criada; nameservers já atualizados no Registro.br
+- Deploy manual validado (`npm run build` + `aws s3 sync` + invalidação) — site no ar
 
 ## Status atual
-- [x] Protótipo v1 do `index.html` criado com conteúdo real
-- [x] Port do site para React + Vite (CSS Modules + design tokens)
-- [x] Componentes: TerminalHero, About, Skills, Experience, Projects, ContactForm, Footer
-- [x] Tokens de design em `site/src/index.css` (`:root`), incluindo grade de pontos no fundo
-- [x] Favicon simples (`site/public/favicon.svg`)
-- [x] Responsividade mobile revisada (~375px, ~768px, ~1200px)
-- [x] Animações: whoami no load + títulos de seção digitando no scroll (com fallback `prefers-reduced-motion`)
-- [x] Scroll-spy no header (link da seção ativa em sage, com `aria-current`)
-- [x] Formulário de contato visual (fake submit — conectado na Fase 2)
-- [x] Passada formal de acessibilidade (h1 no hero, foco visível, reduced-motion, `aria-current`, autocomplete)
-- [x] Planejamento de infra Terraform (seção acima)
-- [ ] Migração de DNS do Registro.br para o Route 53
-- [ ] Deploy S3 + CloudFront + ACM (recursos reais, com confirmação)
-- [ ] CI/CD GitHub Actions (build + deploy)
-- [ ] Fase 2: Lambda + API Gateway + SES para o formulário
+- [x] v1 completo: header com scroll-spy, hero, sobre, skills, experiências, projetos, contato (form fake), footer, animações, favicon, acessibilidade básica, responsividade
+- [x] `main` pushada para `origin/main`
+- [x] Conta AWS criada (Paid Plan), MFA no root, usuário IAM administrativo, CLI configurado
+- [x] Domínio `pedrolucas.dev.br` registrado e DNS delegado pro Route 53
+- [x] Bootstrap do Terraform aplicado (bucket de state, sem DynamoDB)
+- [x] Infra principal aplicada: S3 + CloudFront + ACM + Route 53 — **site no ar**
+- [x] Build enviado manualmente pro S3 e validado (CloudFront + domínio próprio)
+- [ ] Workflow de CI/CD (OIDC + `.github/workflows/deploy.yml`)
+- [ ] Lambda + API Gateway + SES para o formulário de contato (Fase 2)
