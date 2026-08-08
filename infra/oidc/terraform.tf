@@ -6,7 +6,7 @@ terraform {
     }
   }
 
-  required_version = ">= 1.2"
+  required_version = ">= 1.11"
 
   # Backend remoto no mesmo bucket de state criado pelo bootstrap, em uma
   # "pasta" própria deste módulo (key = oidc/terraform.tfstate).
