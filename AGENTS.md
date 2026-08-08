@@ -19,11 +19,14 @@ arquivo é sobre *como* trabalhar, não *o quê*.
 ## Estado atual (verifique antes de assumir o contrário)
 - Site React **completo e no ar**: `pedrolucas.dev.br`, servido via
   CloudFront + S3, com HTTPS válido (ACM) e DNS no Route 53.
-- Infra provisionada por Terraform (`infra/bootstrap/` + `infra/site/`) —
-  ver IDs reais dos recursos em `planejamento.md`.
-- Deploy ainda é **manual** (`npm run build` + `aws s3 sync` + invalidação
-  do CloudFront) — CI/CD ainda não existe.
-- `.github/workflows/` está **vazio**.
+- **Deploy é automático**: push na `main` dispara `.github/workflows/deploy.yml`
+  (lint → build → autenticação OIDC → sync S3 → invalidação CloudFront). Não
+  fazer deploy manual a não ser pra debugar algo pontual.
+- Infra provisionada por Terraform em três módulos: `infra/bootstrap/`,
+  `infra/site/` e `infra/oidc/` (provider OIDC do GitHub + role de deploy,
+  permissão mínima, trust restrita à `main` + `deploy.yml`).
+- **CI nunca aplica Terraform** — mudanças de infraestrutura continuam
+  manuais, com confirmação do usuário antes de qualquer `apply`.
 - Repositório tem commits na `main`. Trabalhar em branches de feature e só
   mergear/apagar branch com confirmação explícita do usuário.
 
@@ -33,7 +36,7 @@ arquivo é sobre *como* trabalhar, não *o quê*.
 - `npm run preview` — preview do build
 - `npm run lint` — oxlint
 
-## Deploy manual (até o CI/CD existir)
+## Deploy manual (só para debug pontual — o normal é o CI/CD automático)
 ```
 cd site/
 npm run build
@@ -74,11 +77,11 @@ violada uma vez (merge sem autorização) — não repetir.
 - `find-skills`
 
 ## Tarefas priorizadas
-1. Configurar OIDC (IAM Identity Provider + Role) para o GitHub Actions
-   autenticar na AWS sem access key fixa
-2. Escrever `.github/workflows/deploy.yml`: build → sync com S3 →
-   invalidação do CloudFront, disparado em push na `main`
-3. Planejar a Fase 2: Lambda (C#) + API Gateway + SES para o formulário de
+1. Planejar a Fase 2: Lambda (C#) + API Gateway + SES para o formulário de
    contato — aguardar planejamento específico antes de implementar
-4. Decidir com o usuário se as branches já mergeadas podem ser apagadas —
-   **não apagar sem confirmação**
+2. Decidir com o usuário se as branches já mergeadas (`feat/cicd-oidc`,
+   `fix/oidc-sub-claim`, `docs/readme`, `chore/skill-create-readme`, entre
+   outras) podem ser apagadas — **não apagar sem confirmação**
+3. Quando o GitHub encerrar suporte a Node 20 nos runners, subir
+   `node-version` pra 24 no `deploy.yml` (aviso não-bloqueante já aparece
+   no run — não é urgente, só não esquecer)
