@@ -16,6 +16,17 @@ variable "github_repo" {
   default     = "Pedro-Lucas-OKB/meu-portifolio"
 }
 
+variable "github_sub_claim" {
+  description = <<-EOT
+    Formato do sub claim no trust policy. Repos criados a partir de 15/07/2026
+    emitem o formato imutável com os IDs numéricos: repo:OWNER@OWNER_ID/REPO@REPO_ID:...
+    Sem os IDs (formato legado), o AssumeRoleWithWebIdentity falha com
+    "Not authorized to perform sts:AssumeRoleWithWebIdentity".
+  EOT
+  type        = string
+  default     = "repo:Pedro-Lucas-OKB@73808163/meu-portifolio@1324452047:ref:refs/heads/main"
+}
+
 variable "site_bucket" {
   description = "Bucket S3 do site (destino do sync do build)"
   type        = string

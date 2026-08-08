@@ -28,6 +28,8 @@ resource "aws_iam_openid_connect_provider" "github" {
 # Role que o workflow assume via AssumeRoleWithWebIdentity. O trust policy
 # restringe a autenticação a este repositório, apenas no ref da main e apenas
 # ao workflow deploy.yml (não a qualquer workflow/branch/tag do repo).
+# O sub claim precisa do formato imutável (com os IDs numéricos do dono e do
+# repo) porque o repositório foi criado após 15/07/2026.
 resource "aws_iam_role" "github_actions" {
   name = local.role_name
   assume_role_policy = jsonencode({
@@ -44,7 +46,7 @@ resource "aws_iam_role" "github_actions" {
           "token.actions.githubusercontent.com:job_workflow_ref" = local.github_workflow_ref
         }
         StringLike = {
-          "token.actions.githubusercontent.com:sub" = "repo:${var.github_repo}:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub" = var.github_sub_claim
         }
       }
     }]
