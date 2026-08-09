@@ -9,6 +9,8 @@ env:
   AWS_ROLE_TO_ASSUME: arn:aws:iam::963990211877:role/pedrolucas-portfolio-gh-actions
   S3_BUCKET: pedrolucas.dev.br
   CLOUDFRONT_DISTRIBUTION_ID: E24R25N80WOKZ9
+  # URL da API de contato (output api_invoke_url do módulo infra/contact).
+  VITE_CONTACT_API_URL: https://8xsz3ji8o8.execute-api.us-east-1.amazonaws.com/prod/contato
 
 permissions:
   id-token: write
