@@ -7,13 +7,18 @@ data "aws_caller_identity" "current" {}
 locals {
   role_name = "${var.project_name}-gh-actions"
 
-  # Workflow que tem permissão de assumir a role (definido também no trust policy).
-  github_workflow_ref = "${var.github_repo}/.github/workflows/deploy.yml@refs/heads/main"
+  # Workflows que têm permissão de assumir a role (definidos também no trust policy).
+  github_workflow_refs = [
+    "${var.github_repo}/.github/workflows/deploy.yml@refs/heads/main",
+    "${var.github_repo}/.github/workflows/contact.yml@refs/heads/main",
+  ]
 
-  # ARNs do bucket do site e da distribuição CloudFront (criados em infra/site).
+  # ARNs do bucket do site, da distribuição CloudFront (criados em infra/site)
+  # e da Lambda de contato (criada em infra/contact).
   site_bucket_arn         = "arn:aws:s3:::${var.site_bucket}"
   site_bucket_objects_arn = "arn:aws:s3:::${var.site_bucket}/*"
   cloudfront_dist_arn     = "arn:aws:cloudfront::${data.aws_caller_identity.current.account_id}:distribution/${var.cloudfront_distribution_id}"
+  contact_lambda_arn      = "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:${var.project_name}-contact-form"
 }
 
 # Identity Provider do GitHub (token.actions.githubusercontent.com).
@@ -25,9 +30,9 @@ resource "aws_iam_openid_connect_provider" "github" {
   client_id_list = ["sts.amazonaws.com"]
 }
 
-# Role que o workflow assume via AssumeRoleWithWebIdentity. O trust policy
+# Role que os workflows assumem via AssumeRoleWithWebIdentity. O trust policy
 # restringe a autenticação a este repositório, apenas no ref da main e apenas
-# ao workflow deploy.yml (não a qualquer workflow/branch/tag do repo).
+# aos workflows deploy.yml e contact.yml (não a qualquer workflow/branch/tag).
 # O sub claim precisa do formato imutável (com os IDs numéricos do dono e do
 # repo) porque o repositório foi criado após 15/07/2026.
 resource "aws_iam_role" "github_actions" {
@@ -43,7 +48,7 @@ resource "aws_iam_role" "github_actions" {
       Condition = {
         StringEquals = {
           "token.actions.githubusercontent.com:aud"              = "sts.amazonaws.com"
-          "token.actions.githubusercontent.com:job_workflow_ref" = local.github_workflow_ref
+          "token.actions.githubusercontent.com:job_workflow_ref" = local.github_workflow_refs
         }
         StringLike = {
           "token.actions.githubusercontent.com:sub" = var.github_sub_claim
@@ -53,8 +58,9 @@ resource "aws_iam_role" "github_actions" {
   })
 }
 
-# Permissões mínimas: escrever no bucket do site (s3 sync) e invalidar o
-# CloudFront. Nada além disso — sem AdministratorAccess.
+# Permissões mínimas: escrever no bucket do site (s3 sync), invalidar o
+# CloudFront e publicar o código da Lambda de contato. Nada além disso —
+# sem AdministratorAccess.
 resource "aws_iam_role_policy" "deploy" {
   name = "deploy"
   role = aws_iam_role.github_actions.id
@@ -78,6 +84,12 @@ resource "aws_iam_role_policy" "deploy" {
         Effect   = "Allow"
         Action   = ["cloudfront:CreateInvalidation"]
         Resource = [local.cloudfront_dist_arn]
+      },
+      {
+        Sid      = "PublishContactLambda"
+        Effect   = "Allow"
+        Action   = ["lambda:UpdateFunctionCode", "lambda:GetFunction"]
+        Resource = [local.contact_lambda_arn]
       }
     ]
   })
