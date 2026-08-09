@@ -28,6 +28,7 @@ Sempre usar como variáveis CSS (custom properties), nunca hex direto num compon
 | `--text-muted` | `#8b8fa3` | texto secundário, labels, metadados |
 | `--accent-violet` | `#8b7cf6` | acento primário (nod ao C#/.NET) — links de destaque, tags, foco |
 | `--accent-sage` | `#6fcf97` | acento secundário (nod ao Linux Mint) — prompts, sucesso, cursor |
+| `--accent-danger` | `#e07b7b` | erro / estado de falha (ex: mensagens de erro do formulário) |
 | `--border` | `#2c2e3d` | bordas e divisores |
 | `--term-dot` | `#40414f` | pontos do "semáforo" da barra do terminal (decorativo) |
 | `--bg-dot` | `rgba(44, 46, 61, 0.6)` | grade de pontos do fundo (derivada do `--border`, opacidade sutil-média) |

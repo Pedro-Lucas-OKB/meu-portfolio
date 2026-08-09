@@ -92,6 +92,15 @@
   outline: none;
 }
 
+/* Campo honeypot: invisível para humanos, presente para bots. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .sendBtn {
   justify-self: start;
   background: var(--accent-violet);
@@ -109,10 +118,23 @@
   opacity: 0.9;
 }
 
+.sendBtn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .formNote {
   color: var(--text-muted);
   font-size: var(--text-xs);
   margin-top: var(--space-2);
+}
+
+.formNote.isSuccess {
+  color: var(--accent-sage);
+}
+
+.formNote.isError {
+  color: var(--accent-danger);
 }
 
 @media (max-width: 480px) {
