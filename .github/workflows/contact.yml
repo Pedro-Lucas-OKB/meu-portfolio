@@ -1,0 +1,56 @@
+name: Deploy Contact Lambda
+
+# Publica o código C# da Lambda de contato quando há mudanças em functions/.
+# A infraestrutura (Lambda, API Gateway, SES) é criada pelo Terraform
+# (módulo infra/contact) — aqui só atualiza o código da função existente.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "functions/**"
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-1
+  AWS_ROLE_TO_ASSUME: arn:aws:iam::963990211877:role/pedrolucas-portfolio-gh-actions
+  LAMBDA_FUNCTION_NAME: pedrolucas-portfolio-contact-form
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        working-directory: functions/ContactForm
+        run: dotnet restore
+
+      - name: Publish
+        working-directory: functions/ContactForm
+        run: dotnet publish -c Release -r linux-arm64 --self-contained false -o publish
+
+      - name: Package
+        working-directory: functions/ContactForm
+        run: |
+          cd publish
+          zip -r /tmp/contact-form.zip .
+
+      - name: Update Lambda code
+        run: aws lambda update-function-code --function-name ${{ env.LAMBDA_FUNCTION_NAME }} --zip-file fileb:///tmp/contact-form.zip
