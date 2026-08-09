@@ -21,3 +21,8 @@ dist/
 .DS_Store
 .vscode/*
 .idea/
+
+# .NET build artifacts
+bin/
+obj/
+*.user
