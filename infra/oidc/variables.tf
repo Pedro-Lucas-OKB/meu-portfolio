@@ -13,7 +13,7 @@ variable "aws_region" {
 variable "github_repo" {
   description = "Repositório autorizado a assumir a role via OIDC (formato: dono/repo)"
   type        = string
-  default     = "Pedro-Lucas-OKB/meu-portifolio"
+  default     = "Pedro-Lucas-OKB/meu-portfolio"
 }
 
 variable "github_sub_claim" {
@@ -24,7 +24,7 @@ variable "github_sub_claim" {
     "Not authorized to perform sts:AssumeRoleWithWebIdentity".
   EOT
   type        = string
-  default     = "repo:Pedro-Lucas-OKB@73808163/meu-portifolio@1324452047:ref:refs/heads/main"
+  default     = "repo:Pedro-Lucas-OKB@73808163/meu-portfolio@1324452047:ref:refs/heads/main"
 }
 
 variable "site_bucket" {

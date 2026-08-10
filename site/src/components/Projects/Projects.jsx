@@ -21,7 +21,7 @@ const PROJECTS = [
     description:
       'Site estático hospedado na AWS (S3 + CloudFront), com formulário de contato via Lambda em C# e SES.',
     tags: ['HTML/CSS/JS', 'AWS'],
-    href: 'https://github.com/Pedro-Lucas-OKB/meu-portifolio',
+    href: 'https://github.com/Pedro-Lucas-OKB/meu-portfolio',
   },
 ]
 

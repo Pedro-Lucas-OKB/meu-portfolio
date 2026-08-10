@@ -7,7 +7,7 @@
 *Dev Back-end .NET · C# · AWS · React*
 
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fpedrolucas.dev.br&style=flat-square&label=pedrolucas.dev.br)](https://pedrolucas.dev.br)
-[![Deploy](https://github.com/Pedro-Lucas-OKB/meu-portifolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Pedro-Lucas-OKB/meu-portifolio/actions/workflows/deploy.yml)
+[![Deploy](https://github.com/Pedro-Lucas-OKB/meu-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Pedro-Lucas-OKB/meu-portfolio/actions/workflows/deploy.yml)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square)](https://react.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-3c873a?style=flat-square)](https://nodejs.org)
 [![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.11-7b42bc?style=flat-square)](https://www.terraform.io)
@@ -50,7 +50,7 @@ navegação por comandos (`cd ./sobre`, `ls ./skills`, `cat contato.md`).
 ## Estrutura de pastas
 
 ```
-meu-portifolio/
+meu-portfolio/
 ├── site/                       # SPA React 19 + Vite
 │   ├── src/
 │   │   ├── components/         # Header, TerminalHero, About, Skills, Experience,
