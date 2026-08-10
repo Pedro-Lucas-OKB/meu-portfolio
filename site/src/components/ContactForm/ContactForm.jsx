@@ -24,7 +24,9 @@ function validate(payload) {
   if (nomeError) errors.push(nomeError)
 
   const emailError = validateField('email', payload.email, MAX_EMAIL)
-  if (!emailError && !EMAIL_RE.test(payload.email.trim())) {
+  if (emailError) {
+    errors.push(emailError)
+  } else if (!EMAIL_RE.test(payload.email.trim())) {
     errors.push('email inválido')
   }
 
