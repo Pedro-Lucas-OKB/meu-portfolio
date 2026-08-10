@@ -158,12 +158,43 @@ função para o Terraform não reverter o que o CI publica.
   `Contato do portfólio: <nome>`, corpo com nome/email/mensagem.
 
 ### Checklist de implementação
-- [ ] (Pedro) Projeto C# `functions/ContactForm/` (net10.0) conforme o contrato
-- [ ] (agente) Módulo `infra/contact/` + apply manual com confirmação
-- [ ] (agente) Estender role do CI (`lambda:UpdateFunctionCode`) + apply
-- [ ] (agente) Workflow CI para publicar a Lambda + variável da URL da API
-- [ ] (agente) Frontend: conectar `ContactForm` à API (estados + honeypot)
-- [ ] Verificar identidade SES (link no e-mail), teste ponta a ponta
+- [x] (Pedro) Projeto C# `functions/ContactForm/` (net10.0) conforme o contrato
+- [x] (agente) Módulo `infra/contact/` + apply manual com confirmação
+- [x] (agente) Estender role do CI (`lambda:UpdateFunctionCode`) + apply
+- [x] (agente) Workflow CI para publicar a Lambda + variável da URL da API
+- [x] (agente) Frontend: conectar `ContactForm` à API (estados + honeypot)
+- [x] Verificar identidade SES (link no e-mail), teste ponta a ponta
+
+## Possíveis tarefas futuras (não priorizadas)
+
+### Cloudflare Turnstile no formulário de contato
+- **Motivo**: barrar bots automatizados que spammam o `POST /contato`. Honeypot
+  atual só pega bots ingênuos; throttling do API Gateway é por API inteira.
+- **Custo**: grátis (plano free). Token invisível em background; usuário na
+  maioria das vezes nem vê.
+- **Como**: frontend carrega o widget e envia o token no POST; a Lambda chama
+  `POST https://challenges.cloudflare.com/turnstile/v0/siteverify` com a secret
+  key e rejeita se `success != true`. Secret key como secret do GitHub Actions
+  ou env var da Lambda, nunca hardcoded.
+- **Risco real hoje**: baixo — SES em sandbox limita a 200 e-mails/dia, e o
+  destino é sempre o próprio e-mail do Pedro (inundar a caixa de entrada é o
+  pior cenário, não custo financeiro).
+
+### Renomear repositório `meu-portifolio` → `meu-portfolio`
+- **Motivo**: typo no nome do repo ("portifólio"). Não afeta nada visível
+  (site, domínio, AWS), mas está errado no GitHub.
+- **Detalhe**: o `sub` claim imutável do OIDC e o `job_workflow_ref` carregam o
+  nome do repo — renomear exige atualizar o trust policy e **reaplicar o módulo
+  `infra/oidc/`**, senão o CI para de autenticar.
+- **Plano completo**: `local_files/Plano-rename-repo.md`
+
+### Saída do sandbox SES / identidade de domínio
+- **Motivo**: e-mails do formulário caem no spam (identidade é e-mail
+  `pedrolucasep5100@gmail.com`, sem DKIM). Trocar para domínio
+  `pedrolucas.dev.br` (DKIM + MAIL FROM via Route 53) autentica o remetente e
+  melhora a entrega.
+- **Custo**: mudança de infra (`infra/contact/` + DNS), apply manual.
+- **Status**: descartada por ora pelo usuário ("não precisa por agora").
 
 ## Status atual
 - [x] v1 completo: header com scroll-spy, hero, sobre, skills, experiências, projetos, contato (form fake), footer, animações, favicon, acessibilidade básica, responsividade
@@ -175,5 +206,6 @@ função para o Terraform não reverter o que o CI publica.
 - [x] Build enviado manualmente pro S3 e validado (primeira verificação, antes do CI/CD)
 - [x] Workflow de CI/CD (OIDC + `.github/workflows/deploy.yml`) — **deploy automático funcionando**
 - [x] README atualizado refletindo deploy e CI/CD reais (skill `create-readme`)
-- [ ] Lambda + API Gateway + SES para o formulário de contato (Fase 2)
+- [x] Lambda + API Gateway + SES para o formulário de contato (Fase 2)
+- [x] Frontend conectado à API real + validadores na Lambda (contrato atendido)
 - [ ] Decidir destino das branches já mergeadas (apagar ou manter) — só com confirmação do usuário
