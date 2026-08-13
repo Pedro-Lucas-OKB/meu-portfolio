@@ -9,7 +9,7 @@
 [![Site](https://img.shields.io/website?url=https%3A%2F%2Fpedrolucas.dev.br&style=flat-square&label=pedrolucas.dev.br)](https://pedrolucas.dev.br)
 [![Deploy](https://github.com/Pedro-Lucas-OKB/meu-portfolio/actions/workflows/deploy.yml/badge.svg)](https://github.com/Pedro-Lucas-OKB/meu-portfolio/actions/workflows/deploy.yml)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square)](https://react.dev)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-3c873a?style=flat-square)](https://nodejs.org)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D24-3c873a?style=flat-square)](https://nodejs.org)
 [![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.11-7b42bc?style=flat-square)](https://www.terraform.io)
 
 [Stack](#stack) • [Estrutura](#estrutura-de-pastas) • [Rodando localmente](#rodando-localmente) • [Deploy e CI/CD](#deploy-e-cicd) • [Roadmap](#roadmap)
@@ -80,7 +80,7 @@ meu-portfolio/
 
 ## Rodando localmente
 
-Pré-requisito: Node.js 20+ e npm.
+Pré-requisito: Node.js 24+ e npm.
 
 ```bash
 cd site
@@ -139,7 +139,7 @@ publica o código da função existente.
 - [x] Fase 2 — formulário de contato funcional via API Gateway + Lambda
       (C#/.NET) + SES
 - [x] Renomear repositório para `meu-portfolio`
-- [ ] Trocar para Node 24 no runner quando o suporte ao Node 20 for encerrado
+- [x] Migrar para Node 24 no runner (Node 20 foi descontinuado)
 - [ ] Cloudflare Turnstile no formulário de contato (anti-bot)
 
 ## Contato
