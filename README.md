@@ -42,6 +42,12 @@ navegação por comandos (`cd ./sobre`, `ls ./skills`, `cat contato.md`).
 - Ícones **SVG inline** em `src/components/Icons` (sem biblioteca de ícones)
 - Lint com **oxlint** (não ESLint); sem suíte de testes
 
+**Back-end** (`functions/ContactForm/`)
+- **Lambda em C#/.NET 10** (`dotnet10`, ARM64) — processa o formulário de contato
+- **API Gateway REST** (`POST /contato`, CORS + throttling) expõe a Lambda
+- **SES** envia o e-mail da mensagem (identidade `pedrolucasep5100@gmail.com`)
+- Publicado via CI (`contact.yml`): `dotnet publish` → zip → `update-function-code`
+
 **Infraestrutura e CI/CD**
 - **Terraform** (infra como código) em `infra/`
 - **AWS**: S3 (estáticos) + CloudFront (CDN/HTTPS) + ACM (certificado) + Route 53 (DNS)
@@ -57,13 +63,16 @@ meu-portfolio/
 │   │   │                       # Projects, ContactForm, Footer, SectionTitle, Icons
 │   │   ├── App.jsx
 │   │   └── index.css           # design tokens globais (:root)
-│   ├── public/                 # favicon.svg, icons.svg
+│   ├── public/                 # favicon.svg, icons.svg, curriculo-pedro-lucas.pdf
 │   └── package.json
+├── functions/
+│   └── ContactForm/            # Lambda do contato (C#/.NET 10)
 ├── infra/                      # Terraform (infra como código)
 │   ├── bootstrap/              # bucket de state do Terraform (aplicado 1x)
 │   ├── site/                   # S3 + CloudFront + ACM + Route 53
-│   └── oidc/                   # IAM OIDC provider + role de deploy do CI/CD
-├── .github/workflows/          # deploy.yml — CI/CD (push na main)
+│   ├── oidc/                   # IAM OIDC provider + role de deploy do CI/CD
+│   └── contact/                # API Gateway + Lambda + SES (formulário de contato)
+├── .github/workflows/          # deploy.yml + contact.yml (push na main)
 ├── AGENTS.md                   # instruções para o agente de IA
 ├── planejamento.md             # escopo, decisões e conteúdo do projeto
 └── README.md
@@ -107,9 +116,15 @@ O deploy do site é **automático**: um push na `main` dispara o workflow
 5. invalida o cache do CloudFront para o site atualizar na hora.
 
 ```text
-push na main → lint/build (falha para o deploy) → assume role via OIDC
+push na main → lint/build (falha bloqueia o deploy) → assume role via OIDC
             → s3 sync → invalidação CloudFront → pedrolucas.dev.br atualizado
 ```
+
+A Lambda do formulário de contato tem o próprio workflow
+(`.github/workflows/contact.yml`), disparado quando há mudanças em `functions/`:
+`dotnet publish` → zip → `aws lambda update-function-code`. A infraestrutura
+(API Gateway, Lambda, SES) fica no Terraform (`infra/contact/`); o workflow só
+publica o código da função existente.
 
 > [!NOTE]
 > O CI/CD não aplica Terraform: mudanças de infraestrutura (novos recursos AWS,
@@ -121,12 +136,15 @@ push na main → lint/build (falha para o deploy) → assume role via OIDC
 - [x] Port do protótipo para componentes React (v1)
 - [x] Deploy na AWS: S3 + CloudFront + ACM + Route 53 em `pedrolucas.dev.br`
 - [x] CI/CD: GitHub Actions com autenticação OIDC (build + sync + invalidação)
-- [ ] **Fase 2** — formulário de contato funcional via API Gateway + Lambda
+- [x] Fase 2 — formulário de contato funcional via API Gateway + Lambda
       (C#/.NET) + SES
+- [x] Renomear repositório para `meu-portfolio`
 - [ ] Trocar para Node 24 no runner quando o suporte ao Node 20 for encerrado
+- [ ] Cloudflare Turnstile no formulário de contato (anti-bot)
 
 ## Contato
 
 - E-mail: pedrolucasep5100@gmail.com
 - GitHub: github.com/pedro-lucas-okb
 - LinkedIn: linkedin.com/in/pedrolucas-dev
+- Currículo: [curriculo-pedro-lucas.pdf](https://pedrolucas.dev.br/curriculo-pedro-lucas.pdf) (fonte: `site/public/`)
