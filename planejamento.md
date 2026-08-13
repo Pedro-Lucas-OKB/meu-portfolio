@@ -181,8 +181,9 @@ função para o Terraform não reverter o que o CI publica.
   pior cenário, não custo financeiro).
 
 ### Renomear repositório `meu-portifolio` → `meu-portfolio`
-- **Motivo**: typo no nome do repo ("portifólio"). Não afeta nada visível
-  (site, domínio, AWS), mas está errado no GitHub.
+- **Status**: ✅ concluído (rename + trust policy do OIDC reaplicado + deploy validado).
+- **Motivo original**: typo no nome do repo ("portifólio"). Não afeta nada visível
+  (site, domínio, AWS), mas estava errado no GitHub.
 - **Detalhe**: o `sub` claim imutável do OIDC e o `job_workflow_ref` carregam o
   nome do repo — renomear exige atualizar o trust policy e **reaplicar o módulo
   `infra/oidc/`**, senão o CI para de autenticar.
@@ -196,6 +197,32 @@ função para o Terraform não reverter o que o CI publica.
 - **Custo**: mudança de infra (`infra/contact/` + DNS), apply manual.
 - **Status**: descartada por ora pelo usuário ("não precisa por agora").
 
+### Monitoramento de acessos (CloudFront + Athena)
+- **Status**: adiado (usuário decidiu deixar para depois). Plano aprovado.
+- **Objetivo**: volume de visitas, páginas mais acessadas e downloads do
+  currículo (`/curriculo-pedro-lucas.pdf`).
+- **Abordagem**: CloudFront access logs + Athena (nativa AWS, sem cookies/LGPD,
+  custo ~centavos/mês, reforça o portfólio cloud).
+- **Ressalva**: site é SPA de página única com âncoras — os logs mostram a rota
+  raiz `/`, assets e o PDF, mas **não** qual seção foi mais vista (isso exigiria
+  script client-side, segunda etapa).
+- **Como**:
+  1. `infra/site/main.tf`: adicionar `logging_config` na `aws_cloudfront_distribution.site`
+     (bucket de logs + prefix `cdn/`)
+  2. Novo bucket privado `pedrolucas-portfolio-logs-<account>` + `public_access_block`
+     + bucket policy restrita ao CloudFront (`s3:PutObject`, `cloudfront.amazonaws.com`,
+     ARN da distribuição)
+  3. Novo módulo `infra/analytics/`: Glue database + tabela (schema de logs
+     CloudFront) com **partition projection por data**
+  4. Consultas Athena prontas (documentar em `local_files/Explicações/04-analytics-athena.md`):
+     - Visitas/dia: `count(*) where uri = '/'`
+     - Top paths: `group by uri`
+     - Downloads do currículo: `count(*) where uri = '/curriculo-pedro-lucas.pdf'`
+     - Erros 4xx/5xx e país de origem
+  5. Fluxo: branch `feat/analytics` → `terraform plan` (site + analytics) → **parar**
+     → confirmar `apply` → consulta de teste; logs chegam em ~24h (delay padrão).
+- **Custo/privacidade**: logs contêm IPs; ficam em bucket próprio e privado.
+
 ## Status atual
 - [x] v1 completo: header com scroll-spy, hero, sobre, skills, experiências, projetos, contato (form fake), footer, animações, favicon, acessibilidade básica, responsividade
 - [x] `main` pushada para `origin/main`
@@ -208,4 +235,8 @@ função para o Terraform não reverter o que o CI publica.
 - [x] README atualizado refletindo deploy e CI/CD reais (skill `create-readme`)
 - [x] Lambda + API Gateway + SES para o formulário de contato (Fase 2)
 - [x] Frontend conectado à API real + validadores na Lambda (contrato atendido)
+- [x] Repositório renomeado para `meu-portfolio` (trust policy OIDC reaplicado)
+- [x] Download do currículo em PDF na seção de contato
+- [x] Migração para Node 24 no runner do deploy
+- [ ] Monitoramento de acessos (CloudFront + Athena) — plano salvo, adiado
 - [ ] Decidir destino das branches já mergeadas (apagar ou manter) — só com confirmação do usuário
