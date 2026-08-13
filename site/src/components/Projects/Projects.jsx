@@ -6,21 +6,21 @@ const PROJECTS = [
     name: 'ecommerce-order-processing/',
     description:
       'Microsserviços com processamento assíncrono via RabbitMQ, separando pedidos em workers de pagamento, estoque e notificação. API com ASP.NET Core Minimal APIs e EF Core + PostgreSQL. CI/CD com GitHub Actions.',
-    tags: ['C#', 'RabbitMQ', 'PostgreSQL', 'Docker'],
+    tags: ['C#', '.NET', 'RabbitMQ', 'PostgreSQL', 'EF Core', 'Docker Compose', 'GitHub Actions'],
     href: 'https://github.com/Pedro-Lucas-OKB/rabbitmq-ecommerce-order-processing',
   },
   {
     name: 'simplified-bank/',
     description:
       'API de transações financeiras com 13 endpoints em Clean Architecture. Row versioning no SQL Server pra resolver concorrência em transações simultâneas, JWT e senhas criptografadas.',
-    tags: ['C#', '.NET', 'SQL Server', 'DDD'],
+    tags: ['C#', '.NET', 'SQL Server', 'DDD', 'Clean Architecture', 'EF Core', 'CQRS', 'Mediator', 'Dependency Injection'],
     href: 'https://github.com/Pedro-Lucas-OKB/simplified-bank',
   },
   {
     name: 'este-portfolio/',
     description:
       'Site estático hospedado na AWS (S3 + CloudFront), com formulário de contato via Lambda em C# e SES.',
-    tags: ['HTML/CSS/JS', 'AWS'],
+    tags: ['HTML/CSS/JS', 'C#', '.NET', 'AWS', 'Lambda', 'Route 53', 'CloudFront', 'SES', 'S3', 'GitHub Actions', 'CI/CD', 'Infrastructure as Code (IaC)', 'OIDC'],
     href: 'https://github.com/Pedro-Lucas-OKB/meu-portfolio',
   },
 ]

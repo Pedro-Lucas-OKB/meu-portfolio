@@ -71,7 +71,7 @@ function Header() {
   return (
     <header id="top" ref={headerRef} className={styles.header}>
       <div className={styles.inner}>
-        <a className={styles.brand} href="#terminal">
+        <a className={styles.brand} href="/">
           pedro-lucas@portfolio: ~
         </a>
         <button

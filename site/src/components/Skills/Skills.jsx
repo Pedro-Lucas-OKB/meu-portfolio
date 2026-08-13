@@ -3,28 +3,28 @@ import styles from './Skills.module.css'
 
 const SKILL_GROUPS = [
   {
-    label: 'Backend',
-    skills: ['C#', '.NET / ASP.NET Core', 'Minimal APIs', 'REST APIs', 'EF Core', 'JWT'],
+    label: 'Back-end',
+    skills: ['C#', '.NET / ASP.NET Core', 'Minimal APIs', 'REST APIs', 'RESTful APIs', 'EF Core', 'JWT'],
+  },
+  {
+    label: 'Front-end',
+    skills: ['React', 'Blazor', 'HTML', 'CSS', 'JavaScript', 'Tailwind CSS'],
   },
   {
     label: 'Arquitetura e boas práticas',
-    skills: ['Clean Architecture', 'DDD', 'SOLID', 'Clean Code', 'Repository / Unit of Work'],
+    skills: ['Clean Architecture', 'Domain-Driven Design (DDD)', 'SOLID', 'Clean Code', 'Repository', 'Unit of Work', 'CQRS', 'Mediator', 'Dependency Injection'],
   },
   {
     label: 'Banco de dados e mensageria',
     skills: ['SQL Server', 'PostgreSQL', 'Supabase', 'RabbitMQ'],
   },
   {
-    label: 'Front-end',
-    skills: ['React', 'Blazor', 'HTML', 'CSS', 'JavaScript'],
-  },
-  {
     label: 'Cloud e DevOps',
-    skills: ['AWS (EC2, S3, RDS, ECS, IAM)', 'Docker', 'Docker Compose', 'GitHub Actions', 'CI/CD'],
+    skills: ['AWS (EC2, S3, RDS, ECS, IAM)', 'Infrastructure as Code (IaC)', 'Docker', 'Docker Compose', 'GitHub Actions', 'CI/CD'],
   },
   {
     label: 'Testes e segurança',
-    skills: ['xUnit', 'Testcontainers', 'FluentAssertions', 'Postman'],
+    skills: ['xUnit', 'Testcontainers', 'FluentAssertions', 'Postman', 'Bruno'],
   },
 ]
 

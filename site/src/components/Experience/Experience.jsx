@@ -7,7 +7,7 @@ const COMMITS = [
     hash: 'a91c2f4',
     ref: 'HEAD -> lideranca',
     role: 'Líder de Desenvolvimento',
-    company: 'LearningLab',
+    company: 'LearningLab (Projeto Acadêmico)',
     period: 'Mar 2026 - Atual',
     bullets: [
       'Gerenciei e priorizei tarefas no ClickUp, organizando o fluxo de trabalho de uma equipe de 5 devs.',
@@ -19,8 +19,8 @@ const COMMITS = [
   {
     hash: 'b32e8d1',
     ref: 'desenvolvimento',
-    role: 'Desenvolvedor .NET Estagiário',
-    company: 'LearningLab',
+    role: 'Desenvolvedor .NET',
+    company: 'LearningLab (Projeto Acadêmico)',
     period: 'Out 2025 - Atual',
     bullets: [
       'Padronizei o uso de arquivos .env em dev e produção, evitando exposição de dados sensíveis.',
@@ -29,7 +29,7 @@ const COMMITS = [
       'Adicionei rate limiting em 3 endpoints (IP e e-mail) contra ataques brute force.',
       'Escrevi testes unitários e de integração com xUnit e Postman.',
     ],
-    stats: ['-82.000 linhas', '+3 endpoints', '+rate limiting', '+xUnit'],
+    stats: ['-82.000 linhas', '+rate limiting', '+xUnit'],
   },
   {
     hash: 'c73f0b2',
