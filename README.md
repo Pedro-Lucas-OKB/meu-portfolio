@@ -57,7 +57,7 @@ meu-portfolio/
 │   │   │                       # Projects, ContactForm, Footer, SectionTitle, Icons
 │   │   ├── App.jsx
 │   │   └── index.css           # design tokens globais (:root)
-│   ├── public/                 # favicon.svg, icons.svg
+│   ├── public/                 # favicon.svg, icons.svg, curriculo-pedro-lucas.pdf
 │   └── package.json
 ├── infra/                      # Terraform (infra como código)
 │   ├── bootstrap/              # bucket de state do Terraform (aplicado 1x)
@@ -130,3 +130,4 @@ push na main → lint/build (falha para o deploy) → assume role via OIDC
 - E-mail: pedrolucasep5100@gmail.com
 - GitHub: github.com/pedro-lucas-okb
 - LinkedIn: linkedin.com/in/pedrolucas-dev
+- Currículo: [curriculo-pedro-lucas.pdf](curriculo-pedro-lucas.pdf)
