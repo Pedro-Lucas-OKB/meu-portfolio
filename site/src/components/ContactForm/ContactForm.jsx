@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import SectionTitle from '../SectionTitle/SectionTitle.jsx'
 import styles from './ContactForm.module.css'
-import { MailIcon, LinkedinIcon, GithubIcon } from '../Icons/Icons.jsx'
+import { MailIcon, LinkedinIcon, GithubIcon, DownloadIcon } from '../Icons/Icons.jsx'
 
 const API_URL = import.meta.env.VITE_CONTACT_API_URL
 
@@ -143,6 +143,15 @@ function ContactForm() {
           </span>
           <a href="https://github.com/pedro-lucas-okb" target="_blank" rel="noopener">
             github.com/pedro-lucas-okb
+          </a>
+        </div>
+        <div className={styles.contactRow}>
+          <span className={styles.contactLabel}>
+            <DownloadIcon className={styles.contactIcon} />
+            currículo
+          </span>
+          <a href="/curriculo-pedro-lucas.pdf" download>
+            ./curriculo-pedro-lucas.pdf
           </a>
         </div>
       </div>

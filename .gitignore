@@ -1,4 +1,5 @@
-# Dados pessoais (protótipo + PDF do currículo) — nunca commitar
+# Dados pessoais (protótipo + versões privadas do currículo) — nunca commitar.
+# O PDF público do currículo fica versionado em site/public/curriculo-pedro-lucas.pdf.
 local_files/
 
 # Secrets e ambiente

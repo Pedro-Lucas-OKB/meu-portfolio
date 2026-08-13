@@ -62,9 +62,11 @@ commits menores.
 
 ## O que nunca commitar
 - `node_modules/`, `dist/` — devem estar no `.gitignore`
+- `local_files/` — protótipo, credenciais e versões privadas do currículo
+  (o PDF público do currículo é versionado em `site/public/curriculo-pedro-lucas.pdf`)
 - `.env` ou qualquer arquivo com credenciais AWS, chave de API, e-mail/senha
-  do SES — quando a Fase 2 (Lambda + SES) começar, credenciais AWS vão como
-  *secrets* do GitHub Actions, nunca hardcoded ou commitadas
+  do SES — credenciais AWS vão como *secrets* do GitHub Actions, nunca
+  hardcoded ou commitadas
 - Arquivos de build/cache do editor (`.vite/`, `.DS_Store`, etc.)
 
 Um `.gitignore` mínimo pro projeto:
